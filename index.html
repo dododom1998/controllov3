@@ -2,7 +2,7 @@
 <html lang="it">
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-<title>Contatore Posto di Controllo - v1 Tasti 46px</title>
+<title>Contatore Posto di Controllo - v1 Tasti 48px</title>
 <style>
   /* BASE DI PARTENZA NATIVA: TOTAL BLACK */
   :root {
@@ -36,7 +36,7 @@
     background-color: var(--bg-main); 
     color: #f8fafc;
     text-align: center;
-    padding: 6px 12px calc(10px + env(safe-area-inset-bottom));
+    padding: 4px 10px calc(8px + env(safe-area-inset-bottom)); /* Ridotti leggermente i margini esterni */
     margin: 0;
     height: 100vh;
     height: -webkit-fill-available;
@@ -50,18 +50,18 @@
     overflow: hidden;
   }
 
-  /* HEADER */
+  /* HEADER COMPATTATO */
   .header-area {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    height: 28px;
-    margin-bottom: 4px;
+    height: 24px;
+    margin-bottom: 2px;
     flex-shrink: 0;
   }
   h2 { 
     margin: 0; 
-    font-size: 14px; 
+    font-size: 13px; 
     text-transform: uppercase; 
     letter-spacing: 0.5px;
     color: var(--text-title);
@@ -71,32 +71,32 @@
     border: 1px solid var(--border-card);
     color: #e2e8f0;
     border-radius: 50%;
-    width: 28px;
-    height: 28px;
-    font-size: 13px;
+    width: 24px;
+    height: 24px;
+    font-size: 11px;
     display: flex;
     align-items: center;
     justify-content: center;
   }
   
-  /* BLOCCO TARGHE (Tasti portati a 46px) */
+  /* BLOCCO TARGHE (Tasti portati a 48px) */
   .top-tg-block {
     background: var(--bg-card);
     border-radius: 12px;
-    padding: 6px 10px;
+    padding: 4px 8px;
     display: flex;
     align-items: center;
     justify-content: space-between;
     box-sizing: border-box;
     border: 1px solid var(--border-card);
-    height: 110px; /* Aumentato leggermente per i tasti da 46px */
-    margin-bottom: 6px;
+    height: 112px; 
+    margin-bottom: 4px;
     flex-shrink: 0;
   }
   .tg-side-btns {
     display: flex;
     flex-direction: column;
-    gap: 6px;
+    gap: 4px;
     width: 28%;
   }
   .tg-center-display {
@@ -104,25 +104,25 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
-    gap: 4px;
+    gap: 2px;
   }
   .tg-label-num {
-    font-size: 13px;
+    font-size: 12px;
     color: #cbd5e1;
     display: flex;
     justify-content: space-between;
     align-items: center;
   }
   .tg-label-num span {
-    font-size: 24px;
+    font-size: 22px;
     font-weight: 800;
     color: #ffffff;
     line-height: 1;
   }
 
   .btn-tg-v {
-    height: 46px !important; 
-    min-height: 46px !important;
+    height: 48px !important; 
+    min-height: 48px !important;
     font-size: 15px !important;
     border-radius: 8px;
     font-weight: bold;
@@ -133,21 +133,21 @@
   .flex-grid {
     display: flex;
     flex-direction: column;
-    gap: 6px;
+    gap: 4px;
     flex-grow: 1;
-    margin-bottom: 6px;
+    margin-bottom: 4px;
   }
   .flex-row {
     display: flex;
-    gap: 6px;
+    gap: 4px;
     flex: 1;
   }
   
-  /* CARD (Compattate leggermente per fare spazio ai tasti più grandi) */
+  /* CARD */
   .card {
     background: var(--bg-card);
     border-radius: 12px;
-    padding: 4px 8px; 
+    padding: 4px 6px; 
     flex: 1;
     display: flex;
     flex-direction: column;
@@ -162,8 +162,8 @@
   }
   
   .card h3 { 
-    margin: 2px 0 0 0; 
-    font-size: 13px; 
+    margin: 1px 0 0 0; 
+    font-size: 12px; 
     color: var(--text-title); 
     text-transform: uppercase;
     font-weight: 700;
@@ -174,7 +174,7 @@
   }
   
   .num { 
-    font-size: 34px; /* Ottimizzato millimetricamente per display iPhone */
+    font-size: 32px; 
     font-weight: 800; 
     margin: auto 0; 
     line-height: 1; 
@@ -183,7 +183,7 @@
   
   .btn-container {
     display: flex;
-    gap: 6px;
+    gap: 4px;
     width: 100%;
   }
   
@@ -198,11 +198,11 @@
     transform: scale(0.95);
   }
   
-  /* TASTI +1 E -1 PORTATI A 46PX */
+  /* TASTI +1 E -1 PORTATI A 48PX */
   .card button {
     font-size: 16px !important;   
-    height: 46px !important;      
-    min-height: 46px !important;
+    height: 48px !important;      
+    min-height: 48px !important;
     border-radius: 6px;
   }
   
@@ -210,18 +210,18 @@
   .plus-sosta { background: #2563eb; color: white; flex: 1.8; } 
   .minus { background: #dc2626; color: white; flex: 1; } 
 
-  /* TASTO APPIEDATI PORTATO A 46PX */
+  /* TASTO APPIEDATI PORTATO A 48PX */
   .btn-appiedati {
     background: #1d4ed8;
     color: white;
     width: 100%;
-    height: 46px;
-    min-height: 46px;
+    height: 48px;
+    min-height: 48px;
     font-size: 14px;
     font-weight: bold;
     border-radius: 10px;
     text-transform: uppercase;
-    margin-bottom: 6px;
+    margin-bottom: 4px;
     border: 1px solid #2563eb;
     display: flex;
     align-items: center;
@@ -234,14 +234,14 @@
   .footer {
     display: flex;
     flex-direction: column;
-    gap: 6px;
+    gap: 4px;
     flex-shrink: 0;
   }
   
   .summary { 
     font-size: 12px; 
     background: #050505; 
-    padding: 8px 10px; 
+    padding: 6px 10px; 
     border-radius: 8px; 
     text-align: left; 
     white-space: pre-line; 
@@ -260,18 +260,18 @@
     color: #38bdf8;
   }
   
-  /* 3 TASTI INFERIORI PORTATI A 46PX */
+  /* 3 TASTI INFERIORI PORTATI A 48PX */
   .action-btns { 
     display: flex; 
-    gap: 6px; 
-    height: 46px; 
-    min-height: 46px;
+    gap: 4px; 
+    height: 48px; 
+    min-height: 48px;
   }
   .whatsapp { background: #16a34a; color: white; flex: 1.4; font-size: 15px; border-radius: 8px; height: 100%; }
   .undo { background: #4b5563; color: white; flex: 0.8; font-size: 18px; border-radius: 8px; height: 100%; }
   .reset { background: #b45309; color: white; flex: 0.8; font-size: 18px; border-radius: 8px; height: 100%; }
 
-  /* POPUP MODAL APPIEDATI (Anche qui tasti interni a 46px) */
+  /* POPUP MODAL APPIEDATI */
   .modal-overlay {
     position: fixed;
     top: 0; left: 0; width: 100%; height: 100%;
@@ -292,7 +292,7 @@
     border: 2px solid var(--border-card);
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 8px;
   }
   .btn-chiudi-modal {
     background: #0f766e;
@@ -302,7 +302,7 @@
     font-weight: bold;
     border-radius: 10px;
     text-transform: uppercase;
-    height: 46px;
+    height: 48px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -384,8 +384,8 @@
 
 <div class="modal-overlay" id="modalAppiedati">
   <div class="modal-content">
-    <h2 style="color:#38bdf8; margin:4px 0 8px 0; font-size:16px;">Controlli Appiedati</h2>
-    <div style="display: flex; flex-direction: column; gap: 8px; flex-grow: 1; margin-bottom:8px;">
+    <h2 style="color:#38bdf8; margin:2px 0 6px 0; font-size:15px;">Controlli Appiedati</h2>
+    <div style="display: flex; flex-direction: column; gap: 6px; flex-grow: 1; margin-bottom:6px;">
       <div class="flex-row">
         <div class="card pos-highlight">
           <h3>Ita Pos</h3>
@@ -461,7 +461,6 @@ function feedbackTattico() {
   } catch (e) {}
 }
 
-// Aggiornato per riflettere lo stato iniziale scuro
 function toggleModalita() {
   feedbackTattico();
   const isBlue = document.body.classList.toggle("blue-mode");
@@ -533,7 +532,6 @@ function aggiornaSchermata() {
   btnUndo.style.opacity = cronologiaAzioni.length > 0 ? "1" : "0.3";
 }
 
-// Invio testo tramite WhatsApp
 function inviaWhatsApp() {
   feedbackTattico();
   const t = testo();
