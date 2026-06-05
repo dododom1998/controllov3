@@ -40,7 +40,7 @@
     -webkit-user-select: none;
     user-select: none;
     transition: background 0.3s ease;
-    overflow: hidden; /* Impedisce qualsiasi scroll */
+    overflow: hidden;
   }
   
   html {
@@ -76,24 +76,24 @@
     justify-content: center;
   }
   
-  /* BLOCCO TARGHE V1 ORIGINALE */
+  /* BLOCCO TARGHE - OTTIMIZZATO */
   .top-tg-block {
     background: var(--bg-card);
     border-radius: 12px;
-    padding: 6px 10px;
+    padding: 8px 10px;
     display: flex;
     align-items: center;
     justify-content: space-between;
     box-sizing: border-box;
     border: 1px solid var(--border-card);
-    height: 72px;
+    height: 100px; /* Aumentato per ospitare i tasti più grandi */
     margin-bottom: 6px;
     flex-shrink: 0;
   }
   .tg-side-btns {
     display: flex;
     flex-direction: column;
-    gap: 4px;
+    gap: 6px;
     width: 28%;
   }
   .tg-center-display {
@@ -101,31 +101,33 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
-    gap: 2px;
+    gap: 4px;
   }
   .tg-label-num {
-    font-size: 12px;
+    font-size: 13px;
     color: #cbd5e1;
     display: flex;
     justify-content: space-between;
     align-items: center;
   }
   .tg-label-num span {
-    font-size: 22px;
+    font-size: 24px;
     font-weight: 800;
     color: #ffffff;
     line-height: 1;
   }
 
+  /* TASTI TARGA INGRANDITI */
   .btn-tg-v {
-    height: 30px !important; 
-    min-height: 30px !important;
-    font-size: 13px !important;
-    border-radius: 6px;
+    height: 42px !important; 
+    min-height: 42px !important;
+    font-size: 15px !important;
+    border-radius: 8px;
     font-weight: bold;
+    text-transform: uppercase;
   }
 
-  /* GRIGLIA CENTRALE BLOCCATA PER EVITARE L'EFFETTO ALLUNGATO DI IMG_8952.PNG */
+  /* GRIGLIA CENTRALE */
   .flex-grid {
     display: flex;
     flex-direction: column;
@@ -139,7 +141,7 @@
     flex: 1;
   }
   
-  /* CARD CON PROPORZIONI V1 ORIGINALI */
+  /* CARD */
   .card {
     background: var(--bg-card);
     border-radius: 12px;
@@ -205,7 +207,7 @@
   .plus-sosta { background: #2563eb; color: white; flex: 1.8; } 
   .minus { background: #dc2626; color: white; flex: 1; } 
 
-  /* TASTO APPIEDATI STABILE */
+  /* TASTO APPIEDATI */
   .btn-appiedati {
     background: #1d4ed8;
     color: white;
@@ -224,7 +226,7 @@
     flex-shrink: 0;
   }
 
-  /* FOOTER ANCORATO IN BASSO */
+  /* FOOTER */
   .footer {
     display: flex;
     flex-direction: column;
@@ -254,7 +256,6 @@
     color: #0ea5e9;
   }
   
-  /* I 3 TASTI CON LE ICONE PERFETTAMENTE INTEGRATI */
   .action-btns { 
     display: flex; 
     gap: 6px; 
@@ -305,7 +306,7 @@
   <button class="btn-mode" onclick="toggleNotturna()">🌙</button>
 </div>
 
-<!-- BLOCCO TARGHE V1 -->
+<!-- BLOCCO TARGHE V1 AGGIORNATO CON TASTI GRANDI -->
 <div class="top-tg-block">
   <div class="tg-side-btns">
     <button class="plus-sosta btn-tg-v" onclick="cambia('tgSosta',1)">+1 S</button>
@@ -321,7 +322,7 @@
   </div>
 </div>
 
-<!-- GRIGLIA CONTATORI CORRETTA (DUE RIGHE COMPLETI) -->
+<!-- GRIGLIA CONTATORI -->
 <div class="flex-grid">
   <div class="flex-row">
     <div class="card pos-highlight">
@@ -364,7 +365,7 @@
 
 <button class="btn-appiedati" onclick="apriModal()">🚶 Appiedati</button>
 
-<!-- FOOTER COMPATTO E COMODO CON I 3 TASTI ALLINEATI -->
+<!-- FOOTER -->
 <div class="footer">
   <div class="summary" id="riepilogo">Nessun controllo effettuato</div>
   <div class="action-btns">
