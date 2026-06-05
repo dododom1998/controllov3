@@ -2,7 +2,7 @@
 <html lang="it">
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-<title>Contatore Posto di Controllo - v1 iOS Screen Fit</title>
+<title>Contatore Posto di Controllo - v1 iOS Perfect Fit</title>
 <style>
   :root {
     --bg-main: #0f172a;
@@ -29,7 +29,7 @@
     background: var(--bg-main); 
     color: #f8fafc;
     text-align: center;
-    padding: 6px 10px calc(4px + env(safe-area-inset-bottom));
+    padding: 6px 10px calc(6px + env(safe-area-inset-bottom));
     margin: 0;
     min-height: -webkit-fill-available;
     height: 100vh;
@@ -51,8 +51,8 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+    height: 30px;
     margin-bottom: 2px;
-    height: 32px;
   }
   h2 { 
     margin: 0; 
@@ -66,24 +66,26 @@
     border: 1px solid var(--border-card);
     color: #e2e8f0;
     border-radius: 50%;
-    width: 30px;
-    height: 30px;
-    font-size: 14px;
+    width: 28px;
+    height: 28px;
+    font-size: 13px;
     display: flex;
     align-items: center;
     justify-content: center;
   }
   
+  /* BLOCCO TARGHE COMPATTO */
   .top-tg-block {
     background: var(--bg-card);
     border-radius: 10px;
-    padding: 6px 8px;
+    padding: 4px 8px;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-bottom: 4px;
+    height: 76px;
     box-sizing: border-box;
     border: 1px solid var(--border-card);
+    margin-bottom: 4px;
   }
   .tg-side-btns {
     display: flex;
@@ -106,26 +108,27 @@
     align-items: center;
   }
   .tg-label-num span {
-    font-size: 22px;
+    font-size: 20px;
     font-weight: 800;
     color: #ffffff;
     line-height: 1;
   }
 
   .btn-tg-v {
-    height: 38px !important; 
-    min-height: 38px !important;
-    font-size: 14px !important;
+    height: 32px !important; 
+    min-height: 32px !important;
+    font-size: 13px !important;
     border-radius: 6px;
     font-weight: bold;
   }
 
+  /* GRIGLIA CENTRALE BLOCCATA NELL'ALTEZZA */
   .flex-grid {
     display: flex;
     flex-direction: column;
     gap: 4px;
     flex-grow: 1;
-    margin-bottom: 4px;
+    max-height: calc(100vh - 250px); /* Impedisce ai quadranti di allungarsi all'infinito */
   }
   .flex-row {
     display: flex;
@@ -152,7 +155,7 @@
   
   .card h3 { 
     margin: 0; 
-    font-size: 12px; 
+    font-size: 11px; 
     color: var(--text-title); 
     text-transform: uppercase;
     font-weight: 700;
@@ -163,9 +166,9 @@
   }
   
   .num { 
-    font-size: 32px; 
+    font-size: 28px; 
     font-weight: 800; 
-    margin: 2px 0; 
+    margin: 1px 0; 
     line-height: 1; 
     color: #fff; 
   }
@@ -188,25 +191,27 @@
   }
   
   .card button {
-    font-size: 16px !important;   
-    height: 36px !important;      
-    min-height: 36px !important;
-    border-radius: 6px;
+    font-size: 14px !important;   
+    height: 30px !important;      
+    min-height: 30px !important;
+    border-radius: 5px;
   }
   
   .plus { background: #059669; color: white; flex: 1.8; } 
   .plus-sosta { background: #2563eb; color: white; flex: 1.8; } 
   .minus { background: #dc2626; color: white; flex: 1; } 
 
+  /* TASTO APPIEDATI */
   .btn-appiedati {
     background: #1d4ed8;
     color: white;
     width: 100%;
-    height: 38px;
-    font-size: 14px;
+    height: 34px;
+    font-size: 13px;
     font-weight: bold;
     border-radius: 8px;
     text-transform: uppercase;
+    margin-top: 4px;
     margin-bottom: 4px;
     border: 1px solid #2563eb;
     display: flex;
@@ -215,6 +220,7 @@
     gap: 6px;
   }
 
+  /* REPARTO FOOTER COMANDI */
   .footer {
     display: flex;
     flex-direction: column;
@@ -222,7 +228,7 @@
   }
   
   .summary { 
-    font-size: 12px; 
+    font-size: 11px; 
     background: #020617; 
     padding: 6px 10px; 
     border-radius: 8px; 
@@ -231,8 +237,11 @@
     border: 1px solid #1e293b;
     color: #38bdf8; 
     font-family: monospace;
-    min-height: 32px;
+    height: 30px;
+    min-height: 30px;
     box-sizing: border-box;
+    display: flex;
+    align-items: center;
   }
   body.dark-eclipse .summary {
     background: #050505;
@@ -243,12 +252,12 @@
   .action-btns { 
     display: flex; 
     gap: 4px; 
-    height: 40px;
+    height: 38px;
   }
-  .copy { background: #0f766e; color: white; flex: 2; font-size: 13px; border-radius: 6px; text-transform: uppercase; }
-  .whatsapp { background: #16a34a; color: white; flex: 2; font-size: 13px; border-radius: 6px; text-transform: uppercase; }
-  .undo { background: #4b5563; color: white; flex: 1; font-size: 16px; border-radius: 6px; }
-  .reset { background: #b45309; color: white; flex: 1; font-size: 15px; border-radius: 6px; }
+  .copy { background: #0f766e; color: white; flex: 2; font-size: 12px; border-radius: 6px; text-transform: uppercase; }
+  .whatsapp { background: #16a34a; color: white; flex: 2; font-size: 12px; border-radius: 6px; text-transform: uppercase; }
+  .undo { background: #4b5563; color: white; flex: 1; font-size: 15px; border-radius: 6px; }
+  .reset { background: #b45309; color: white; flex: 1; font-size: 14px; border-radius: 6px; }
 
   /* POPUP MODAL APPIEDATI */
   .modal-overlay {
@@ -291,7 +300,6 @@
   <button class="btn-mode" onclick="toggleNotturna()">🌙</button>
 </div>
 
-<!-- BLOCCO TARGHE -->
 <div class="top-tg-block">
   <div class="tg-side-btns">
     <button class="plus-sosta btn-tg-v" onclick="cambia('tgSosta',1)">+1 S</button>
@@ -307,7 +315,6 @@
   </div>
 </div>
 
-<!-- GRIGLIA CONTATORI COMPATTA -->
 <div class="flex-grid">
   <div class="flex-row">
     <div class="card pos-highlight">
@@ -350,7 +357,6 @@
 
 <button class="btn-appiedati" onclick="apriModal()">🚶 Appiedati</button>
 
-<!-- FOOTER ADESSO COMPLETAMENTE VISIBILE -->
 <div class="footer">
   <div class="summary" id="riepilogo">Nessun controllo effettuato</div>
   <div class="action-btns">
@@ -361,7 +367,6 @@
   </div>
 </div>
 
-<!-- POPUP APPIEDATI -->
 <div class="modal-overlay" id="modalAppiedati">
   <div class="modal-content">
     <h2 style="color:#38bdf8; margin:4px 0 8px 0; font-size:15px;">Controlli Appiedati</h2>
