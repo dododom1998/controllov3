@@ -2,7 +2,7 @@
 <html lang="it">
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-<title>Contatore Posto di Controllo - v1 Fixed Safari & Footer 44px</title>
+<title>Contatore Posto di Controllo - v1 Dynamic Summary</title>
 <style>
   /* BASE DI PARTENZA NATIVA: TOTAL BLACK */
   :root {
@@ -237,18 +237,19 @@
     flex-shrink: 0;
   }
   
+  /* FINESTRA RIEPILOGO: ORA ADATTIVA SENZA SOVRAPPOSIZIONI */
   .summary { 
     font-size: 12px; 
     background: #050505; 
-    padding: 6px 10px; 
+    padding: 8px 10px; /* Aumentato leggermente il respiro interno */
     border-radius: 8px; 
     text-align: left; 
     white-space: pre-line; 
     border: 1px solid #111111;
     color: #0ea5e9; 
     font-family: monospace;
-    height: 34px;
-    min-height: 34px;
+    height: auto; /* Rimosso il blocco rigido */
+    min-height: 34px; /* Mantiene la dimensione minima se vuoto */
     box-sizing: border-box;
     display: flex;
     align-items: center;
@@ -259,11 +260,10 @@
     color: #38bdf8;
   }
   
-  /* MODIFICATI I TASTI INFERIORI PORTANDOLI A 44PX FISSI */
   .action-btns { 
     display: flex; 
     gap: 6px; 
-    height: 44px; /* Bloccato a 44px */
+    height: 44px; 
     min-height: 44px;
   }
   .whatsapp { background: #16a34a; color: white; flex: 1.4; font-size: 15px; border-radius: 8px; height: 100%; }
