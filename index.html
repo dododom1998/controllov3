@@ -2,9 +2,9 @@
 <html lang="it">
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-<title>Contatore Posto di Controllo - v1 Fixed Safari</title>
+<title>Contatore Posto di Controllo - v1 Fixed Safari & Footer 44px</title>
 <style>
-  /* BASE DI PARTENZA NATIVA: TOTAL BLACK CORRETTA */
+  /* BASE DI PARTENZA NATIVA: TOTAL BLACK */
   :root {
     --bg-main: #000000;
     --bg-card: #111111;
@@ -15,7 +15,7 @@
     --pos-text: #fca5a5;
   }
 
-  /* MODALITÀ BLU NOTTE OPZIONALE (Attivabile col tasto in alto) */
+  /* MODALITÀ BLU NOTTE OPZIONALE */
   body.blue-mode {
     --bg-main: #0f172a;
     --bg-card: #1e293b;
@@ -27,7 +27,7 @@
   }
 
   html {
-    background-color: #000000; /* Forza Safari a restare nero durante il caricamento */
+    background-color: #000000; 
     height: -webkit-fill-available;
   }
 
@@ -198,7 +198,7 @@
     transform: scale(0.95);
   }
   
-  /* TASTI DEGLI ALTRI CONTATORI A 44PX */
+  /* TASTI DEI CONTATORI A 44PX */
   .card button {
     font-size: 16px !important;   
     height: 44px !important;      
@@ -259,14 +259,16 @@
     color: #38bdf8;
   }
   
+  /* MODIFICATI I TASTI INFERIORI PORTANDOLI A 44PX FISSI */
   .action-btns { 
     display: flex; 
     gap: 6px; 
-    height: 44px; 
+    height: 44px; /* Bloccato a 44px */
+    min-height: 44px;
   }
-  .whatsapp { background: #16a34a; color: white; flex: 1.4; font-size: 15px; border-radius: 8px; }
-  .undo { background: #4b5563; color: white; flex: 0.8; font-size: 18px; border-radius: 8px; }
-  .reset { background: #b45309; color: white; flex: 0.8; font-size: 18px; border-radius: 8px; }
+  .whatsapp { background: #16a34a; color: white; flex: 1.4; font-size: 15px; border-radius: 8px; height: 100%; }
+  .undo { background: #4b5563; color: white; flex: 0.8; font-size: 18px; border-radius: 8px; height: 100%; }
+  .reset { background: #b45309; color: white; flex: 0.8; font-size: 18px; border-radius: 8px; height: 100%; }
 
   /* POPUP MODAL APPIEDATI */
   .modal-overlay {
