@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Contatore Posto di Controllo - v3 Evolution</title>
+<style>
+  :root {
+    --bg-main: #0f172a;
+    --bg-card: #1e293b;
+    --border-card: #334155;
+    --text-title: #94a3b8;
+    --pos-highlight: #7f1d1d;
+    --pos-border: #991b1b;
+    --pos-text: #fca5a5;
+  }
+
+  /* Variante Nero Assoluto per la Notte */
+  body.dark-eclipse {
+    --bg-main: #000000;
+    --bg-card: #111111;
+    --border-card: #222222;
+    --text-title: #666666;
+    --pos-highlight: #450a0a;
+    --pos-border: #7f1d1d;
+    --pos-text: #fca5a5;
+  }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background: var(--bg-main); 
+    color: #f8fafc;
+    text-align: center;
+    padding: 10px;
+    margin: 0;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    box-sizing: border-box;
+    -webkit-user-select: none;
+    user-select: none;
+    transition: background 0.3s ease;
+  }
+  
+  /* Intestazione con tasto modalità notturna */
+  .header-area {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 4px;
+  }
+  h2 { 
+    margin: 0; 
+    font-size: 16px; 
+    text-transform: uppercase; 
+    letter-spacing: 1px;
+    color: var(--text-title);
+  }
+  .btn-mode {
+    background: var(--bg-card);
+    border: 1px solid var(--border-card);
+    color: #e2e8f0;
+    border-radius: 50%;
+    width: 36px;
+    height: 36px;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* Blocco Unico Targhe in alto */
+  .top-tg-block {
+    background: var(--bg-card);
+    border-radius: 14px;
+    padding: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 8px;
+    box-sizing: border-box;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+    border: 1px solid var(--border-card);
+  }
+  .tg-side-btns {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    width: 30%;
+  }
+  .tg-center-display {
+    width: 38%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 4px;
+  }
+  .tg-label-num {
+    font-size: 14px;
+    color: #cbd5e1;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .tg-label-num span {
+    font-size: 32px;
+    font-weight: 800;
+    color: #ffffff;
+  }
+
+  .btn-tg-v {
+    height: 58px !important; 
+    min-height: 58px !important;
+    font-size: 20px !important;
+    border-radius: 10px;
+    font-weight: bold;
+  }
+
+  /* GRIGLIA COMPATTA OPERATIVA A 6 CONTATORI */
+  .flex-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    flex-grow: 1;
+    margin-bottom: 6px;
+  }
+  .flex-row {
+    display: flex;
+    gap: 8px;
+    flex: 1;
+  }
+  
+  .card {
+    background: var(--bg-card);
+    border-radius: 12px;
+    padding: 4px 8px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    box-sizing: border-box;
+    border: 1px solid var(--border-card);
+  }
+  
+  .card.pos-highlight {
+    background: var(--pos-highlight); 
+    border: 1px solid var(--pos-border);
+  }
+  
+  .card h3 { 
+    margin: 2px 0 0 0; 
+    font-size: 15px; 
+    color: var(--text-title); 
+    text-transform: uppercase;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+  }
+  
+  .card.pos-highlight h3 {
+    color: var(--pos-text);
+  }
+  
+  .num { 
+    font-size: 42px; 
+    font-weight: 800; 
+    margin: 2px 0; 
+    line-height: 1; 
+    color: #fff; 
+  }
+  
+  .btn-container {
+    display: flex;
+    gap: 6px;
+    width: 100%;
+  }
+  
+  button {
+    border: 0;
+    font-weight: bold;
+    touch-action: manipulation;
+    cursor: pointer;
+    transition: transform 0.05s ease, background 0.1s ease;
+  }
+  button:active {
+    transform: scale(0.96);
+  }
+  
+  .card button {
+    font-size: 20px !important;   
+    height: 48px !important;      
+    min-height: 48px !important;
+    border-radius: 8px;
+  }
+  
+  .plus { background: #059669; color: white; flex: 2; } 
+  .plus-sosta { background: #2563eb; color: white; flex: 2; } 
+  .minus { background: #dc2626; color: white; flex: 1; } 
+
+  /* TASTO APPIEDATI */
+  .btn-appiedati {
+    background: #1d4ed8;
+    color: white;
+    width: 100%;
+    padding: 12px;
+    font-size: 16px;
+    font-weight: bold;
+    border-radius: 10px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 6px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    border: 1px solid #2563eb;
+  }
+
+  /* FINESTRA POPUP APPIEDATI */
+  .modal-overlay {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0, 0, 0, 0.95);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    padding: 10px;
+    box-sizing: border-box;
+  }
+  .modal-content {
+    background: var(--bg-main);
+    width: 100%;
+    max-width: 420px;
+    border-radius: 16px;
+    padding: 12px;
+    border: 2px solid var(--border-card);
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    height: 94vh;
+  }
+  .modal-content h2 {
+    color: #38bdf8;
+    margin: 2px 0;
+    font-size: 16px;
+  }
+  .btn-chiudi-modal {
+    background: #0f766e;
+    color: white;
+    padding: 12px;
+    font-size: 18px;
+    font-weight: bold;
+    border-radius: 10px;
+    text-transform: uppercase;
+    margin-top: 2px;
+  }
+
+  /* FOOTER INTERFACCIA */
+  .summary { 
+    font-size: 14px; 
+    background: #020617; 
+    padding: 10px; 
+    border-radius: 10px; 
+    word-wrap: break-word; 
+    margin-bottom: 6px; 
+    min-height: 42px; 
+    text-align: left; 
+    white-space: pre-line; 
+    border: 1px solid #1e293b;
+    color: #38bdf8; 
+    font-family: monospace;
+  }
+  body.dark-eclipse .summary {
+    background: #050505;
+    border-color: #111;
+    color: #0ea5e9;
+  }
+  .action-btns { display: flex; gap: 6px; }
+  .copy { background: #0f766e; color: white; flex: 2; font-size: 16px; padding: 12px 6px; border-radius: 10px; text-transform: uppercase; }
+  .whatsapp { background: #16a34a; color: white; flex: 2; font-size: 16px; padding: 12px 6px; border-radius: 10px; text-transform: uppercase; }
+  .undo { background: #4b5563; color: white; flex: 1; font-size: 18px; padding: 12px 6px; border-radius: 10px; }
+  .reset { background: #b45309; color: white; flex: 1; font-size: 16px; padding: 12px 6px; border-radius: 10px; text-transform: uppercase; }
+</style>
+</head>
+<body>
+
+<div class="header-area">
+  <h2>Posto di Controllo v3</h2>
+  <button class="btn-mode" onclick="toggleNotturna()">🌙</button>
+</div>
+
+<!-- BLOCCO TARGHE -->
+<div class="top-tg-block">
+  <div class="tg-side-btns">
+    <button class="plus-sosta btn-tg-v" onclick="cambia('tgSosta',1)">+1 S</button>
+    <button class="minus btn-tg-v" onclick="cambia('tgSosta',-1)">-1 S</button>
+  </div>
+  <div class="tg-center-display">
+    <div class="tg-label-num">Sosta: <span id="val-tgSosta">0</span></div>
+    <div class="tg-label-num">Occupanti: <span id="val-tg">0</span></div>
+  </div>
+  <div class="tg-side-btns">
+    <button class="plus btn-tg-v" onclick="cambia('tg',1)">+1 O</button>
+    <button class="minus btn-tg-v" onclick="cambia('tg',-1)">-1 O</button>
+  </div>
+</div>
+
+<!-- GRIGLIA PERSONE VEICOLI -->
+<div class="flex-grid">
+  <div class="flex-row">
+    <div class="card pos-highlight">
+      <h3>Ita Pos</h3>
+      <div class="num" id="val-itaPos">0</div>
+      <div class="btn-container">
+        <button class="minus" onclick="cambia('itaPos',-1)">-1</button>
+        <button class="plus" onclick="cambia('itaPos',1)">+1</button>
+      </div>
+    </div>
+    <div class="card">
+      <h3>Ita Neg</h3>
+      <div class="num" id="val-itaNeg">0</div>
+      <div class="btn-container">
+        <button class="minus" onclick="cambia('itaNeg',-1)">-1</button>
+        <button class="plus" onclick="cambia('itaNeg',1)">+1</button>
+      </div>
+    </div>
+  </div>
+  
+  <div class="flex-row">
+    <div class="card pos-highlight">
+      <h3>Com Pos</h3>
+      <div class="num" id="val-comPos">0</div>
+      <div class="btn-container">
+        <button class="minus" onclick="cambia('comPos',-1)">-1</button>
+        <button class="plus" onclick="cambia('comPos',1)">+1</button>
+      </div>
+    </div>
+    <div class="card">
+      <h3>Com Neg</h3>
+      <div class="num" id="val-comNeg">0</div>
+      <div class="btn-container">
+        <button class="minus" onclick="cambia('comNeg',-1)">-1</button>
+        <button class="plus" onclick="cambia('comNeg',1)">+1</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="flex-row">
+    <div class="card pos-highlight">
+      <h3>Extra Pos</h3>
+      <div class="num" id="val-extraPos">0</div>
+      <div class="btn-container">
+        <button class="minus" onclick="cambia('extraPos',-1)">-1</button>
+        <button class="plus" onclick="cambia('extraPos',1)">+1</button>
+      </div>
+    </div>
+    <div class="card">
+      <h3>Extra Neg</h3>
+      <div class="num" id="val-extraNeg">0</div>
+      <div class="btn-container">
+        <button class="minus" onclick="cambia('extraNeg',-1)">-1</button>
+        <button class="plus" onclick="cambia('extraNeg',1)">+1</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<button class="btn-appiedati" onclick="apriModal()">🚶 Appiedati</button>
+
+<div class="footer">
+  <div class="summary" id="riepilogo"></div>
+  <div class="action-btns">
+    <button class="copy" onclick="copia()">Copia</button>
+    <button class="whatsapp" onclick="inviaWhatsApp()">Invia 💬</button>
+    <button class="undo" id="btn-undo" onclick="annulla()" style="opacity: 0.4;">↩︎</button>
+    <button class="reset" onclick="azzera()">Az</button>
+  </div>
+</div>
+
+<!-- POPUP APPIEDATI -->
+<div class="modal-overlay" id="modalAppiedati">
+  <div class="modal-content">
+    <h2>Controlli Appiedati (v3)</h2>
+    <div style="display: flex; flex-direction: column; gap: 6px; flex-grow: 1;">
+      
+      <div class="flex-row">
+        <div class="card pos-highlight">
+          <h3>Ita Pos</h3>
+          <div class="num" id="val-apItaPos">0</div>
+          <div class="btn-container">
+            <button class="minus" onclick="cambia('apItaPos',-1)">-1</button>
+            <button class="plus" onclick="cambia('apItaPos',1)">+1</button>
+          </div>
+        </div>
+        <div class="card">
+          <h3>Ita Neg</h3>
+          <div class="num" id="val-apItaNeg">0</div>
+          <div class="btn-container">
+            <button class="minus" onclick="cambia('apItaNeg',-1)">-1</button>
+            <button class="plus" onclick="cambia('apItaNeg',1)">+1</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="flex-row">
+        <div class="card pos-highlight">
+          <h3>Com Pos</h3>
+          <div class="num" id="val-apComPos">0</div>
+          <div class="btn-container">
+            <button class="minus" onclick="cambia('apComPos',-1)">-1</button>
+            <button class="plus" onclick="cambia('apComPos',1)">+1</button>
+          </div>
+        </div>
+        <div class="card">
+          <h3>Com Neg</h3>
+          <div class="num" id="val-apComNeg">0</div>
+          <div class="btn-container">
+            <button class="minus" onclick="cambia('apComNeg',-1)">-1</button>
+            <button class="plus" onclick="cambia('apComNeg',1)">+1</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="flex-row">
+        <div class="card pos-highlight">
+          <h3>Extra Pos</h3>
+          <div class="num" id="val-apExtraPos">0</div>
+          <div class="btn-container">
+            <button class="minus" onclick="cambia('apExtraPos',-1)">-1</button>
+            <button class="plus" onclick="cambia('apExtraPos',1)">+1</button>
+          </div>
+        </div>
+        <div class="card">
+          <h3>Extra Neg</h3>
+          <div class="num" id="val-apExtraNeg">0</div>
+          <div class="btn-container">
+            <button class="minus" onclick="cambia('apExtraNeg',-1)">-1</button>
+            <button class="plus" onclick="cambia('apExtraNeg',1)">+1</button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <button class="btn-chiudi-modal" onclick="chiudiModal()">Fatto</button>
+  </div>
+</div>
+
+<script>
+let datiSalvati = JSON.parse(localStorage.getItem("contatore_v3")) || {};
+let dati = {
+  tgSosta: Number(datiSalvati.tgSosta) || 0,
+  tg: Number(datiSalvati.tg) || 0,
+  itaNeg: Number(datiSalvati.itaNeg) || 0,
+  itaPos: Number(datiSalvati.itaPos) || 0,
+  comNeg: Number(datiSalvati.comNeg) || 0,
+  comPos: Number(datiSalvati.comPos) || 0,
+  extraNeg: Number(datiSalvati.extraNeg) || 0,
+  extraPos: Number(datiSalvati.extraPos) || 0,
+  apItaNeg: Number(datiSalvati.apItaNeg) || 0,
+  apItaPos: Number(datiSalvati.apItaPos) || 0,
+  apComNeg: Number(datiSalvati.apComNeg) || 0,
+  apComPos: Number(datiSalvati.apComPos) || 0,
+  apExtraNeg: Number(datiSalvati.apExtraNeg) || 0,
+  apExtraPos: Number(datiSalvati.apExtraPos) || 0
+};
+
+// Storico per gestire la funzione Annulla (Undo)
+let cronologiaAzioni = [];
+
+function feedbackTattico() {
+  if (navigator.vibrate) navigator.vibrate(15);
+  try {
+    const AudioContext = window.AudioContext || window.webkitAudioContext;
+    if (!AudioContext) return;
+    const ctx = new AudioContext();
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(550, ctx.currentTime);
+    gain.gain.setValueAtTime(0.15, ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.00001, ctx.currentTime + 0.03);
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    osc.start(); osc.stop(ctx.currentTime + 0.03);
+  } catch (e) {}
+}
+
+function toggleNotturna() {
+  feedbackTattico();
+  document.body.classList.toggle("dark-eclipse");
+}
+
+function salva() {
+  localStorage.setItem("contatore_v3", JSON.stringify(dati));
+}
+
+function cambia(k, v, sbloccaUndo = true) {
+  feedbackTattico();
+  
+  if (sbloccaUndo) {
+    // Memorizziamo lo stato precedente della chiave prima di modificarla
+    cronologiaAzioni.push({ chiave: k, valorePrecedente: dati[k] });
+    if (cronologiaAzioni.length > 20) cronologiaAzioni.shift(); // Evita di intasare la memoria
+  }
+
+  dati[k] = Math.max(0, dati[k] + v);
+  salva(); 
+  aggiornaSchermata();
+}
+
+function annulla() {
+  if (cronologiaAzioni.length === 0) return;
+  feedbackTattico();
+  
+  // Ripristina l'ultimo dato salvato nella cronologia
+  let ultimaAzione = cronologiaAzioni.pop();
+  dati[ultimaAzione.chiave] = ultimaAzione.valorePrecedente;
+  
+  salva();
+  aggiornaSchermata();
+}
+
+function apriModal() { feedbackTattico(); document.getElementById("modalAppiedati").style.display = "flex"; }
+function chiudiModal() { feedbackTattico(); document.getElementById("modalAppiedati").style.display = "none"; }
+
+function testo() {
+  let righe = [];
+  
+  let dettagliPedoni = [];
+  if (dati.apItaNeg > 0) dettagliPedoni.push(`${dati.apItaNeg} ita neg`);
+  if (dati.apItaPos > 0) dettagliPedoni.push(`${dati.apItaPos} ita pos`);
+  if (dati.apComNeg > 0) dettagliPedoni.push(`${dati.apComNeg} com neg`);
+  if (dati.apComPos > 0) dettagliPedoni.push(`${dati.apComPos} com pos`);
+  if (dati.apExtraNeg > 0) dettagliPedoni.push(`${dati.apExtraNeg} extra neg`);
+  if (dati.apExtraPos > 0) '../../'
+  if (dati.apExtraPos > 0) dettagliPedoni.push(`${dati.apExtraPos} extra pos`);
+  
+  if (dettagliPedoni.length > 0) righe.push(`Appiedati: ${dettagliPedoni.join(", ")}`);
+  if (dati.tgSosta > 0) righe.push(`${dati.tgSosta} tg`);
+  
+  let dettagliPersone = [];
+  if (dati.itaNeg > 0) dettagliPersone.push(`${dati.itaNeg} ita neg`);
+  if (dati.itaPos > 0) dettagliPersone.push(`${dati.itaPos} ita pos`);
+  if (dati.comNeg > 0) dettagliPersone.push(`${dati.comNeg} com neg`);
+  if (dati.comPos > 0) dettagliPersone.push(`${dati.comPos} com pos`);
+  if (dati.extraNeg > 0) dettagliPersone.push(`${dati.extraNeg} extra neg`);
+  if (dati.extraPos > 0) dettagliPersone.push(`${dati.extraPos} extra pos`);
+  
+  if (dati.tg > 0) {
+    let rigaTgCon = `${dati.tg} tg`;
+    if (dettagliPersone.length > 0) rigaTgCon += ` con ${dettagliPersone.join(", ")}`;
+    righe.push(rigaTgCon);
+  } else if (dettagliPersone.length > 0) {
+    righe.push(dettagliPersone.join(", "));
+  }
+  
+  return righe.length > 0 ? righe.join("\n") : "Nessun controllo effettuato";
+}
+
+function aggiornaSchermata() {
+  for (let k in dati) {
+    let el = document.getElementById(`val-${k}`);
+    if(el) el.innerText = dati[k];
+  }
+  document.getElementById("riepilogo").innerText = testo();
+  
+  // Gestione visiva del pulsante Annulla
+  let btnUndo = document.getElementById("btn-undo");
+  if (cronologiaAzioni.length > 0) {
+    btnUndo.style.opacity = "1";
+  } else {
+    btnUndo.style.opacity = "0.4";
+  }
+}
+
+function copia() {
+  feedbackTattico();
+  const t = testo();
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(t).then(() => alert("Copiato negli appunti!")).catch(() => fallbackCopia(t));
+  } else { fallbackCopia(t); }
+}
+
+function fallbackCopia(text) {
+  const ta = document.createElement("textarea"); ta.value = text; ta.style.position = "fixed"; document.body.appendChild(ta); ta.focus(); ta.select();
+  try { document.execCommand('copy'); alert("Copiato negli appunti!"); } catch (err) { alert("Errore copia."); }
+  document.body.removeChild(ta);
+}
+
+function inviaWhatsApp() {
+  feedbackTattico();
+  const t = testo();
+  // Codifica il testo per renderlo compatibile con un link web
+  const urlUrl = "whatsapp://send?text=" + encodeURIComponent(t);
+  window.location.href = urlUrl;
+}
+
+function azzera() {
+  feedbackTattico();
+  if (confirm("Ripristinare tutti i contatori della v3 a zero?")) {
+    for (let k in dati) dati[k] = 0;
+    cronologiaAzioni = []; // Svuota lo storico azioni
+    salva(); 
+    aggiornaSchermata();
+  }
+}
+aggiornaSchermata();
+</script>
+</body>
+</html>
