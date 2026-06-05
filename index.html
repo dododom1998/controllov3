@@ -2,7 +2,7 @@
 <html lang="it">
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-<title>Contatore Posto di Controllo - v1 Dynamic Summary</title>
+<title>Contatore Posto di Controllo - v1 Tasti 46px</title>
 <style>
   /* BASE DI PARTENZA NATIVA: TOTAL BLACK */
   :root {
@@ -79,17 +79,17 @@
     justify-content: center;
   }
   
-  /* BLOCCO TARGHE (Tasti a 44px) */
+  /* BLOCCO TARGHE (Tasti portati a 46px) */
   .top-tg-block {
     background: var(--bg-card);
     border-radius: 12px;
-    padding: 8px 10px;
+    padding: 6px 10px;
     display: flex;
     align-items: center;
     justify-content: space-between;
     box-sizing: border-box;
     border: 1px solid var(--border-card);
-    height: 106px; 
+    height: 110px; /* Aumentato leggermente per i tasti da 46px */
     margin-bottom: 6px;
     flex-shrink: 0;
   }
@@ -121,8 +121,8 @@
   }
 
   .btn-tg-v {
-    height: 44px !important; 
-    min-height: 44px !important;
+    height: 46px !important; 
+    min-height: 46px !important;
     font-size: 15px !important;
     border-radius: 8px;
     font-weight: bold;
@@ -143,11 +143,11 @@
     flex: 1;
   }
   
-  /* CARD */
+  /* CARD (Compattate leggermente per fare spazio ai tasti più grandi) */
   .card {
     background: var(--bg-card);
     border-radius: 12px;
-    padding: 6px 8px;
+    padding: 4px 8px; 
     flex: 1;
     display: flex;
     flex-direction: column;
@@ -174,7 +174,7 @@
   }
   
   .num { 
-    font-size: 36px; 
+    font-size: 34px; /* Ottimizzato millimetricamente per display iPhone */
     font-weight: 800; 
     margin: auto 0; 
     line-height: 1; 
@@ -198,11 +198,11 @@
     transform: scale(0.95);
   }
   
-  /* TASTI DEI CONTATORI A 44PX */
+  /* TASTI +1 E -1 PORTATI A 46PX */
   .card button {
     font-size: 16px !important;   
-    height: 44px !important;      
-    min-height: 44px !important;
+    height: 46px !important;      
+    min-height: 46px !important;
     border-radius: 6px;
   }
   
@@ -210,12 +210,13 @@
   .plus-sosta { background: #2563eb; color: white; flex: 1.8; } 
   .minus { background: #dc2626; color: white; flex: 1; } 
 
-  /* TASTO APPIEDATI */
+  /* TASTO APPIEDATI PORTATO A 46PX */
   .btn-appiedati {
     background: #1d4ed8;
     color: white;
     width: 100%;
-    height: 42px;
+    height: 46px;
+    min-height: 46px;
     font-size: 14px;
     font-weight: bold;
     border-radius: 10px;
@@ -237,19 +238,18 @@
     flex-shrink: 0;
   }
   
-  /* FINESTRA RIEPILOGO: ORA ADATTIVA SENZA SOVRAPPOSIZIONI */
   .summary { 
     font-size: 12px; 
     background: #050505; 
-    padding: 8px 10px; /* Aumentato leggermente il respiro interno */
+    padding: 8px 10px; 
     border-radius: 8px; 
     text-align: left; 
     white-space: pre-line; 
     border: 1px solid #111111;
     color: #0ea5e9; 
     font-family: monospace;
-    height: auto; /* Rimosso il blocco rigido */
-    min-height: 34px; /* Mantiene la dimensione minima se vuoto */
+    height: auto; 
+    min-height: 34px; 
     box-sizing: border-box;
     display: flex;
     align-items: center;
@@ -260,17 +260,18 @@
     color: #38bdf8;
   }
   
+  /* 3 TASTI INFERIORI PORTATI A 46PX */
   .action-btns { 
     display: flex; 
     gap: 6px; 
-    height: 44px; 
-    min-height: 44px;
+    height: 46px; 
+    min-height: 46px;
   }
   .whatsapp { background: #16a34a; color: white; flex: 1.4; font-size: 15px; border-radius: 8px; height: 100%; }
   .undo { background: #4b5563; color: white; flex: 0.8; font-size: 18px; border-radius: 8px; height: 100%; }
   .reset { background: #b45309; color: white; flex: 0.8; font-size: 18px; border-radius: 8px; height: 100%; }
 
-  /* POPUP MODAL APPIEDATI */
+  /* POPUP MODAL APPIEDATI (Anche qui tasti interni a 46px) */
   .modal-overlay {
     position: fixed;
     top: 0; left: 0; width: 100%; height: 100%;
@@ -301,6 +302,10 @@
     font-weight: bold;
     border-radius: 10px;
     text-transform: uppercase;
+    height: 46px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 </style>
 </head>
@@ -456,6 +461,7 @@ function feedbackTattico() {
   } catch (e) {}
 }
 
+// Aggiornato per riflettere lo stato iniziale scuro
 function toggleModalita() {
   feedbackTattico();
   const isBlue = document.body.classList.toggle("blue-mode");
@@ -527,6 +533,7 @@ function aggiornaSchermata() {
   btnUndo.style.opacity = cronologiaAzioni.length > 0 ? "1" : "0.3";
 }
 
+// Invio testo tramite WhatsApp
 function inviaWhatsApp() {
   feedbackTattico();
   const t = testo();
