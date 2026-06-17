@@ -333,7 +333,6 @@
   <button class="btn-mode" id="mode-icon" onclick="toggleModalita()">🔴</button>
 </div>
 
-<!-- AUTO IN TRANSITO/SOSTA: BLOCCO TARGHE STANDARD -->
 <div class="top-tg-block">
   <div class="tg-side-btns">
     <button class="plus-sosta btn-tg-v" onclick="cambia('tgSosta',1)">+1 S</button>
@@ -349,7 +348,6 @@
   </div>
 </div>
 
-<!-- AUTO IN TRANSITO/SOSTA: GRIGLIA CENTRALE CONTATORI -->
 <div class="flex-grid">
   <div class="flex-row">
     <div class="card pos-highlight">
@@ -393,7 +391,6 @@
 <button class="btn-trigger-panel btn-pdc" onclick="apriModal('modalPdc')">🚨 Posto di Controllo</button>
 <button class="btn-trigger-panel btn-appiedati" onclick="apriModal('modalAppiedati')">🚶 Appiedati</button>
 
-<!-- FOOTER -->
 <div class="footer">
   <div class="summary" id="riepilogo">Nessun controllo effettuato</div>
   <div class="action-btns">
@@ -404,7 +401,6 @@
   </div>
 </div>
 
-<!-- PANNELLO COMPLAIN: POSTO DI CONTROLLO -->
 <div class="modal-overlay" id="modalPdc">
   <div class="modal-content">
     <h2 style="color:#a78bfa; margin:2px 0 6px 0; font-size:15px;">🚨 Attività Posto di Controllo</h2>
@@ -466,7 +462,6 @@
   </div>
 </div>
 
-<!-- PANNELLO COMPLAIN: APPIEDATI -->
 <div class="modal-overlay" id="modalAppiedati">
   <div class="modal-content">
     <h2 style="color:#38bdf8; margin:4px 0 6px 0; font-size:15px;">Controlli Appiedati</h2>
@@ -585,20 +580,20 @@ function annulla() {
 function apriModal(id) { feedbackTattico(); document.getElementById(id).style.display = "flex"; }
 function chiudiModal(id) { feedbackTattico(); document.getElementById(id).style.display = "none"; }
 
-// Genera il report con o senza formattazione grassetto per WhatsApp
+// Genera il report ultra-essenziale richiesto
 function generaReport(usaGrassetto = false) {
   let righe = [];
   const b = usaGrassetto ? "*" : "";
   
-  // 1. APPIEDATI
+  // 1. APPIEDATI (Nessuna scritta davanti, solo i dettagli dei conteggi)
   let detAp = []; 
   if (dati.apItaNeg > 0) detAp.push(`${b}${dati.apItaNeg}${b} ita neg`);
   if (dati.apItaPos > 0) detAp.push(`${b}${dati.apItaPos}${b} ita pos`);
   if (dati.apStraPos > 0) detAp.push(`${b}${dati.apStraPos}${b} stra pos`);
   if (dati.apStraNeg > 0) detAp.push(`${b}${dati.apStraNeg}${b} stra neg`);
-  if (detAp.length > 0) righe.push(`${b}Appiedati:${b} ${detAp.join(", ")}`);
+  if (detAp.length > 0) righe.push(detAp.join(", "));
   
-  // 2. POSTO DI CONTROLLO
+  // 2. POSTO DI CONTROLLO (Unico che mantiene la scritta fissa davanti in GRASSETTO)
   let righePdc = [];
   if (dati.pdcTgSosta > 0) righePdc.push(`${b}${dati.pdcTgSosta}${b} tg`);
   
@@ -616,10 +611,10 @@ function generaReport(usaGrassetto = false) {
     righePdc.push(detPdcPersone.join(", "));
   }
   if (righePdc.length > 0) {
-    righe.push(`${b}Posto di controllo:${b} ${righePdc.join(", ")}`);
+    righe.push(`${b}POSTO DI CONTROLLO:${b} ${righePdc.join(", ")}`);
   }
 
-  // 3. TRANSITO/SOSTA (BLOCCO PRINCIPALE SOSTITUITO)
+  // 3. TRANSITO/SOSTA (Nessuna scritta davanti, solo i dettagli dei conteggi)
   let righeTransitoSosta = [];
   if (dati.tgSosta > 0) righeTransitoSosta.push(`${b}${dati.tgSosta}${b} tg`);
   
@@ -638,7 +633,7 @@ function generaReport(usaGrassetto = false) {
   }
 
   if (righeTransitoSosta.length > 0) {
-    righe.push(`${b}Transito/Sosta:${b} ${righeTransitoSosta.join(", ")}`);
+    righe.push(righeTransitoSosta.join(", "));
   }
 
   return righe.length > 0 ? righe.join("\n") : "Nessun controllo effettuato";
