@@ -333,7 +333,7 @@
   <button class="btn-mode" id="mode-icon" onclick="toggleModalita()">🔴</button>
 </div>
 
-<!-- AUTO IN TRANSITO: BLOCCO TARGHE STANDARD -->
+<!-- AUTO IN TRANSITO/SOSTA: BLOCCO TARGHE STANDARD -->
 <div class="top-tg-block">
   <div class="tg-side-btns">
     <button class="plus-sosta btn-tg-v" onclick="cambia('tgSosta',1)">+1 S</button>
@@ -349,7 +349,7 @@
   </div>
 </div>
 
-<!-- AUTO IN TRANSITO: GRIGLIA CENTRALE CONTATORI -->
+<!-- AUTO IN TRANSITO/SOSTA: GRIGLIA CENTRALE CONTATORI -->
 <div class="flex-grid">
   <div class="flex-row">
     <div class="card pos-highlight">
@@ -585,7 +585,7 @@ function annulla() {
 function apriModal(id) { feedbackTattico(); document.getElementById(id).style.display = "flex"; }
 function chiudiModal(id) { feedbackTattico(); document.getElementById(id).style.display = "none"; }
 
-// Genera il testo (con o senza asterischi per il grassetto di WhatsApp)
+// Genera il report con o senza formattazione grassetto per WhatsApp
 function generaReport(usaGrassetto = false) {
   let righe = [];
   const b = usaGrassetto ? "*" : "";
@@ -595,10 +595,10 @@ function generaReport(usaGrassetto = false) {
   if (dati.apItaNeg > 0) detAp.push(`${b}${dati.apItaNeg}${b} ita neg`);
   if (dati.apItaPos > 0) detAp.push(`${b}${dati.apItaPos}${b} ita pos`);
   if (dati.apStraPos > 0) detAp.push(`${b}${dati.apStraPos}${b} stra pos`);
-  if (dati.apStraNeg > 0) detAp.push(`${b}${dati.apStraNeg} stra neg`);
+  if (dati.apStraNeg > 0) detAp.push(`${b}${dati.apStraNeg}${b} stra neg`);
   if (detAp.length > 0) righe.push(`${b}Appiedati:${b} ${detAp.join(", ")}`);
   
-  // 2. POSTO DI CONTROLOLO
+  // 2. POSTO DI CONTROLLO
   let righePdc = [];
   if (dati.pdcTgSosta > 0) righePdc.push(`${b}${dati.pdcTgSosta}${b} tg`);
   
@@ -619,8 +619,9 @@ function generaReport(usaGrassetto = false) {
     righe.push(`${b}Posto di controllo:${b} ${righePdc.join(", ")}`);
   }
 
-  // 3. AUTO IN TRANSITO (STANDARD)
-  if (dati.tgSosta > 0) righe.push(`${b}${dati.tgSosta}${b} tg`);
+  // 3. TRANSITO/SOSTA (BLOCCO PRINCIPALE SOSTITUITO)
+  let righeTransitoSosta = [];
+  if (dati.tgSosta > 0) righeTransitoSosta.push(`${b}${dati.tgSosta}${b} tg`);
   
   let detTransitoPersone = [];
   if (dati.itaNeg > 0) detTransitoPersone.push(`${b}${dati.itaNeg}${b} ita neg`);
@@ -631,9 +632,13 @@ function generaReport(usaGrassetto = false) {
   if (dati.tg > 0) {
     let stringaTgTransito = `${b}${dati.tg}${b} tg`;
     if (detTransitoPersone.length > 0) stringaTgTransito += ` con ${detTransitoPersone.join(", ")}`;
-    righe.push(stringaTgTransito);
+    righeTransitoSosta.push(stringaTgTransito);
   } else if (detTransitoPersone.length > 0) {
-    righe.push(detTransitoPersone.join(", "));
+    righeTransitoSosta.push(detTransitoPersone.join(", "));
+  }
+
+  if (righeTransitoSosta.length > 0) {
+    righe.push(`${b}Transito/Sosta:${b} ${righeTransitoSosta.join(", ")}`);
   }
 
   return righe.length > 0 ? righe.join("\n") : "Nessun controllo effettuato";
@@ -644,7 +649,6 @@ function aggiornaSchermata() {
     let el = document.getElementById(`val-${k}`);
     if(el) el.innerText = dati[k];
   }
-  // Sul display dell'app mostra il testo liscio senza asterischi
   document.getElementById("riepilogo").innerText = generaReport(false);
   
   let btnUndo = document.getElementById("btn-undo");
@@ -653,13 +657,13 @@ function aggiornaSchermata() {
 
 function inviaWhatsApp() {
   feedbackTattico();
-  const t = generaReport(true); // Genera con i grassetti per WhatsApp
+  const t = generaReport(true); 
   window.location.href = "whatsapp://send?text=" + encodeURIComponent(t);
 }
 
 function copiaTesto() {
   feedbackTattico();
-  const t = generaReport(true); // Genera con i grassetti per WhatsApp
+  const t = generaReport(true); 
   navigator.clipboard.writeText(t).then(() => {
     const btn = document.getElementById("btn-copia");
     const testoOriginale = btn.innerText;
