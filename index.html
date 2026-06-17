@@ -2,7 +2,7 @@
 <html lang="it">
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-<title>Contatore Posto di Controllo - V1 Rosso Tattico</title>
+<title>Contatore Posto di Controllo - V1 Pro</title>
 <style>
   /* BASE DI PARTENZA NATIVA: TOTAL BLACK */
   :root {
@@ -16,7 +16,7 @@
     --text-main: #f8fafc;
   }
 
-  /* NUOVA MODALITÀ ROSSO TATTICO (Sostituisce il Blu) */
+  /* MODALITÀ ROSSO TATTICO */
   body.red-mode {
     --bg-main: #000000;
     --bg-card: #1a0505;
@@ -80,9 +80,7 @@
     align-items: center;
     justify-content: center;
   }
-  body.red-mode .btn-mode {
-    color: #ef4444;
-  }
+  body.red-mode .btn-mode { color: #ef4444; }
   
   /* BLOCCO TARGHE */
   .top-tg-block {
@@ -215,7 +213,6 @@
   .plus-sosta { background: #2563eb; color: white; flex: 1.8; } 
   .minus { background: #dc2626; color: white; flex: 1; } 
 
-  /* Se siamo in red-mode, i tasti positivi/negativi si adattano per non abbagliare */
   body.red-mode .plus { background: #064e3b; color: #a7f3d0; }
   body.red-mode .plus-sosta { background: #1e3a8a; color: #bfdbfe; }
   body.red-mode .minus { background: #7f1d1d; color: #fca5a5; }
@@ -273,17 +270,20 @@
     color: #f87171;
   }
   
+  /* RIGA PULSANTI AZIONE CON COPIA VELOCE */
   .action-btns { 
     display: flex; 
     gap: 4px; 
     height: 48px; 
     min-height: 48px;
   }
-  .whatsapp { background: #16a34a; color: white; flex: 1.4; font-size: 15px; border-radius: 8px; height: 100%; }
-  .undo { background: #4b5563; color: white; flex: 0.8; font-size: 18px; border-radius: 8px; height: 100%; }
-  .reset { background: #b45309; color: white; flex: 0.8; font-size: 18px; border-radius: 8px; height: 100%; }
+  .whatsapp { background: #16a34a; color: white; flex: 1.1; font-size: 14px; border-radius: 8px; height: 100%; }
+  .copy-btn { background: #0284c7; color: white; flex: 1.1; font-size: 14px; border-radius: 8px; height: 100%; }
+  .undo { background: #4b5563; color: white; flex: 0.5; font-size: 18px; border-radius: 8px; height: 100%; }
+  .reset { background: #b45309; color: white; flex: 0.5; font-size: 18px; border-radius: 8px; height: 100%; }
 
   body.red-mode .whatsapp { background: #064e3b; color: #a7f3d0; }
+  body.red-mode .copy-btn { background: #0369a1; color: #bae6fd; }
   body.red-mode .undo { background: #3f3f46; color: #d4d4d8; }
   body.red-mode .reset { background: #7c2d12; color: #ffedd5; }
 
@@ -398,6 +398,7 @@
   <div class="summary" id="riepilogo">Nessun controllo effettuato</div>
   <div class="action-btns">
     <button class="whatsapp" onclick="inviaWhatsApp()">💬 Invia</button>
+    <button class="copy-btn" id="btn-copia" onclick="copiaTesto()">📋 Copia</button>
     <button class="undo" id="btn-undo" onclick="annulla()" style="opacity: 0.3;">↩︎</button>
     <button class="reset" onclick="azzera()">🗑️</button>
   </div>
@@ -648,6 +649,19 @@ function inviaWhatsApp() {
   feedbackTattico();
   const t = testo();
   window.location.href = "whatsapp://send?text=" + encodeURIComponent(t);
+}
+
+function copiaTesto() {
+  feedbackTattico();
+  const t = testo();
+  navigator.clipboard.writeText(t).then(() => {
+    const btn = document.getElementById("btn-copia");
+    const testoOriginale = btn.innerText;
+    btn.innerText = "✅ Copiato!";
+    setTimeout(() => { btn.innerText = testoOriginale; }, 1500);
+  }).catch(err => {
+    alert("Errore durante la copia.");
+  });
 }
 
 function azzera() {
