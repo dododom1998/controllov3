@@ -2,7 +2,7 @@
 <html lang="it">
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-<title>Contatore Posto di Controllo - V1 Avanzata</title>
+<title>Contatore Posto di Controllo - V1 Rosso Tattico</title>
 <style>
   /* BASE DI PARTENZA NATIVA: TOTAL BLACK */
   :root {
@@ -13,17 +13,19 @@
     --pos-highlight: #450a0a;
     --pos-border: #7f1d1d;
     --pos-text: #fca5a5;
+    --text-main: #f8fafc;
   }
 
-  /* MODALITÀ BLU NOTTE OPZIONALE */
-  body.blue-mode {
-    --bg-main: #0f172a;
-    --bg-card: #1e293b;
-    --border-card: #334155;
-    --text-title: #94a3b8;
-    --pos-highlight: #7f1d1d;
+  /* NUOVA MODALITÀ ROSSO TATTICO (Sostituisce il Blu) */
+  body.red-mode {
+    --bg-main: #000000;
+    --bg-card: #1a0505;
+    --border-card: #3b0707;
+    --text-title: #991b1b;
+    --pos-highlight: #5c0707;
     --pos-border: #991b1b;
-    --pos-text: #fca5a5;
+    --pos-text: #ef4444;
+    --text-main: #fca5a5;
   }
 
   html {
@@ -34,7 +36,7 @@
   body {
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
     background-color: var(--bg-main); 
-    color: #f8fafc;
+    color: var(--text-main);
     text-align: center;
     padding: 4px 10px calc(8px + env(safe-area-inset-bottom));
     margin: 0;
@@ -78,8 +80,11 @@
     align-items: center;
     justify-content: center;
   }
+  body.red-mode .btn-mode {
+    color: #ef4444;
+  }
   
-  /* BLOCCO TARGHE (Transito standard) */
+  /* BLOCCO TARGHE */
   .top-tg-block {
     background: var(--bg-card);
     border-radius: 12px;
@@ -113,12 +118,15 @@
     justify-content: space-between;
     align-items: center;
   }
+  body.red-mode .tg-label-num { color: #fca5a5; }
+  
   .tg-label-num span {
     font-size: 22px;
     font-weight: 800;
     color: #ffffff;
     line-height: 1;
   }
+  body.red-mode .tg-label-num span { color: #ef4444; }
 
   .btn-tg-v {
     height: 48px !important; 
@@ -169,10 +177,6 @@
     font-weight: 700;
   }
   
-  .card.pos-highlight h3 {
-    color: var(--pos-text);
-  }
-  
   .num { 
     font-size: 32px; 
     font-weight: 800; 
@@ -180,6 +184,8 @@
     line-height: 1; 
     color: #fff; 
   }
+  body.red-mode .num { color: #fca5a5; }
+  body.red-mode .card.pos-highlight .num { color: #ef4444; }
   
   .btn-container {
     display: flex;
@@ -198,7 +204,6 @@
     transform: scale(0.95);
   }
   
-  /* TASTI DEI CONTATORI A 48PX */
   .card button {
     font-size: 16px !important;   
     height: 48px !important;      
@@ -210,7 +215,12 @@
   .plus-sosta { background: #2563eb; color: white; flex: 1.8; } 
   .minus { background: #dc2626; color: white; flex: 1; } 
 
-  /* TASTI CENTRALI DI APERTURA PANNELLI (48PX) */
+  /* Se siamo in red-mode, i tasti positivi/negativi si adattano per non abbagliare */
+  body.red-mode .plus { background: #064e3b; color: #a7f3d0; }
+  body.red-mode .plus-sosta { background: #1e3a8a; color: #bfdbfe; }
+  body.red-mode .minus { background: #7f1d1d; color: #fca5a5; }
+
+  /* TASTI CENTRALI DI APERTURA PANNELLI */
   .btn-trigger-panel {
     color: white;
     width: 100%;
@@ -227,8 +237,11 @@
     gap: 6px;
     flex-shrink: 0;
   }
-  .btn-pdc { background: #7c3aed; border: 1px solid #8b5cf6; } /* Viola Tattico */
-  .btn-appiedati { background: #1d4ed8; border: 1px solid #2563eb; } /* Blu Classico */
+  .btn-pdc { background: #7c3aed; border: 1px solid #8b5cf6; } 
+  .btn-appiedati { background: #1d4ed8; border: 1px solid #2563eb; } 
+
+  body.red-mode .btn-pdc { background: #581c87; border-color: #6b21a8; color: #e9d5ff; }
+  body.red-mode .btn-appiedati { background: #1e3a8a; border-color: #1e40af; color: #bfdbfe; }
 
   /* FOOTER */
   .footer {
@@ -254,10 +267,10 @@
     display: flex;
     align-items: center;
   }
-  body.blue-mode .summary {
-    background: #020617;
-    border-color: #1e293b;
-    color: #38bdf8;
+  body.red-mode .summary {
+    background: #110303;
+    border-color: #2d0606;
+    color: #f87171;
   }
   
   .action-btns { 
@@ -269,6 +282,10 @@
   .whatsapp { background: #16a34a; color: white; flex: 1.4; font-size: 15px; border-radius: 8px; height: 100%; }
   .undo { background: #4b5563; color: white; flex: 0.8; font-size: 18px; border-radius: 8px; height: 100%; }
   .reset { background: #b45309; color: white; flex: 0.8; font-size: 18px; border-radius: 8px; height: 100%; }
+
+  body.red-mode .whatsapp { background: #064e3b; color: #a7f3d0; }
+  body.red-mode .undo { background: #3f3f46; color: #d4d4d8; }
+  body.red-mode .reset { background: #7c2d12; color: #ffedd5; }
 
   /* POPUP SCHERMATE APPIEDATI E POSTO DI CONTROLLO */
   .modal-overlay {
@@ -306,15 +323,17 @@
     align-items: center;
     justify-content: center;
   }
+  body.red-mode .btn-chiudi-modal { background: #991b1b; color: #fca5a5; }
 </style>
 </head>
 <body>
 
 <div class="header-area">
   <h2>Posto di Controllo V1</h2>
-  <button class="btn-mode" id="mode-icon" onclick="toggleModalita()">🔵</button>
+  <button class="btn-mode" id="mode-icon" onclick="toggleModalita()">🔴</button>
 </div>
 
+<!-- AUTO IN TRANSITO: BLOCCO TARGHE STANDARD -->
 <div class="top-tg-block">
   <div class="tg-side-btns">
     <button class="plus-sosta btn-tg-v" onclick="cambia('tgSosta',1)">+1 S</button>
@@ -330,6 +349,7 @@
   </div>
 </div>
 
+<!-- AUTO IN TRANSITO: GRIGLIA CONTATORI STANDARD -->
 <div class="flex-grid">
   <div class="flex-row">
     <div class="card pos-highlight">
@@ -373,6 +393,7 @@
 <button class="btn-trigger-panel btn-pdc" onclick="apriModal('modalPdc')">🚨 Posto di Controllo</button>
 <button class="btn-trigger-panel btn-appiedati" onclick="apriModal('modalAppiedati')">🚶 Appiedati</button>
 
+<!-- FOOTER -->
 <div class="footer">
   <div class="summary" id="riepilogo">Nessun controllo effettuato</div>
   <div class="action-btns">
@@ -382,6 +403,7 @@
   </div>
 </div>
 
+<!-- PANNELLO COMPLAIN: POSTO DI CONTROLLO -->
 <div class="modal-overlay" id="modalPdc">
   <div class="modal-content">
     <h2 style="color:#a78bfa; margin:2px 0 6px 0; font-size:15px;">🚨 Attività Posto di Controllo</h2>
@@ -443,6 +465,7 @@
   </div>
 </div>
 
+<!-- PANNELLO COMPLAIN: APPIEDATI -->
 <div class="modal-overlay" id="modalAppiedati">
   <div class="modal-content">
     <h2 style="color:#38bdf8; margin:4px 0 6px 0; font-size:15px;">Controlli Appiedati</h2>
@@ -491,19 +514,16 @@
 <script>
 let datiSalvati = JSON.parse(localStorage.getItem("contatoreV1")) || {};
 let dati = {
-  // Transito normale
   tgSosta: Number(datiSalvati.tgSosta) || 0,
   tg: Number(datiSalvati.tg) || 0,
   itaNeg: Number(datiSalvati.itaNeg) || 0,
   itaPos: Number(datiSalvati.itaPos) || 0,
   straPos: Number(datiSalvati.straPos) || 0,
   straNeg: Number(datiSalvati.straNeg) || 0,
-  // Appiedati
   apItaNeg: Number(datiSalvati.apItaNeg) || 0,
   apItaPos: Number(datiSalvati.apItaPos) || 0,
   apStraPos: Number(datiSalvati.apStraPos) || 0,
   apStraNeg: Number(datiSalvati.apStraNeg) || 0,
-  // Posto di Controllo dedicato
   pdcTgSosta: Number(datiSalvati.pdcTgSosta) || 0,
   pdcTg: Number(datiSalvati.pdcTg) || 0,
   pdcItaNeg: Number(datiSalvati.pdcItaNeg) || 0,
@@ -533,8 +553,8 @@ function feedbackTattico() {
 
 function toggleModalita() {
   feedbackTattico();
-  const isBlue = document.body.classList.toggle("blue-mode");
-  document.getElementById("mode-icon").innerText = isBlue ? "⬛" : "🔵";
+  const isRed = document.body.classList.toggle("red-mode");
+  document.getElementById("mode-icon").innerText = isRed ? "⚫" : "🔴";
 }
 
 function salva() {
@@ -567,7 +587,6 @@ function chiudiModal(id) { feedbackTattico(); document.getElementById(id).style.
 function testo() {
   let righe = [];
   
-  // 1. BLOCCO APPIEDATI
   let detAp = []; 
   if (dati.apItaNeg > 0) detAp.push(`${dati.apItaNeg} ita neg`);
   if (dati.apItaPos > 0) detAp.push(`${dati.apItaPos} ita pos`);
@@ -575,7 +594,6 @@ function testo() {
   if (dati.apStraNeg > 0) detAp.push(`${dati.apStraNeg} stra neg`);
   if (detAp.length > 0) righe.push(`Appiedati: ${detAp.join(", ")}`);
   
-  // 2. BLOCCO POSTO DI CONTROLLO (ISOLATO)
   let righePdc = [];
   if (dati.pdcTgSosta > 0) righePdc.push(`${dati.pdcTgSosta} tg`);
   
@@ -592,12 +610,10 @@ function testo() {
   } else if (detPdcPersone.length > 0) {
     righePdc.push(detPdcPersone.join(", "));
   }
-  
   if (righePdc.length > 0) {
     righe.push(`Posto di controllo: ${righePdc.join(", ")}`);
   }
 
-  // 3. BLOCCO AUTO IN TRANSITO STANDARD
   if (dati.tgSosta > 0) righe.push(`${dati.tgSosta} tg`);
   
   let detTransitoPersone = [];
