@@ -580,20 +580,12 @@ function annulla() {
 function apriModal(id) { feedbackTattico(); document.getElementById(id).style.display = "flex"; }
 function chiudiModal(id) { feedbackTattico(); document.getElementById(id).style.display = "none"; }
 
-// Genera il report ultra-essenziale richiesto
+// Genera il report rispettando l'ordine logico richiesto
 function generaReport(usaGrassetto = false) {
   let righe = [];
   const b = usaGrassetto ? "*" : "";
   
-  // 1. APPIEDATI (Nessuna scritta davanti, solo i dettagli dei conteggi)
-  let detAp = []; 
-  if (dati.apItaNeg > 0) detAp.push(`${b}${dati.apItaNeg}${b} ita neg`);
-  if (dati.apItaPos > 0) detAp.push(`${b}${dati.apItaPos}${b} ita pos`);
-  if (dati.apStraPos > 0) detAp.push(`${b}${dati.apStraPos}${b} stra pos`);
-  if (dati.apStraNeg > 0) detAp.push(`${b}${dati.apStraNeg}${b} stra neg`);
-  if (detAp.length > 0) righe.push(detAp.join(", "));
-  
-  // 2. POSTO DI CONTROLLO (Unico che mantiene la scritta fissa davanti in GRASSETTO)
+  // RIGA 1: POSTO DI CONTROLLO (In cima, con intestazione fissa in GRASSETTO)
   let righePdc = [];
   if (dati.pdcTgSosta > 0) righePdc.push(`${b}${dati.pdcTgSosta}${b} tg`);
   
@@ -614,7 +606,17 @@ function generaReport(usaGrassetto = false) {
     righe.push(`${b}POSTO DI CONTROLLO:${b} ${righePdc.join(", ")}`);
   }
 
-  // 3. TRANSITO/SOSTA (Nessuna scritta davanti, solo i dettagli dei conteggi)
+  // RIGA 2: APPIEDATI (Subito sotto al PDC, senza scritte fisse davanti)
+  let detAp = []; 
+  if (dati.apItaNeg > 0) detAp.push(`${b}${dati.apItaNeg}${b} ita neg`);
+  if (dati.apItaPos > 0) detAp.push(`${b}${dati.apItaPos}${b} ita pos`);
+  if (dati.apStraPos > 0) detAp.push(`${b}${dati.apStraPos}${b} stra pos`);
+  if (dati.apStraNeg > 0) detAp.push(`${b}${dati.apStraNeg}${b} stra neg`);
+  if (detAp.length > 0) {
+    righe.push(detAp.join(", "));
+  }
+  
+  // RIGA 3: TRANSITO/SOSTA (In fondo, senza scritte fisse davanti)
   let righeTransitoSosta = [];
   if (dati.tgSosta > 0) righeTransitoSosta.push(`${b}${dati.tgSosta}${b} tg`);
   
@@ -656,6 +658,7 @@ function inviaWhatsApp() {
   window.location.href = "whatsapp://send?text=" + encodeURIComponent(t);
 }
 
+// Copia il testo formattato
 function copiaTesto() {
   feedbackTattico();
   const t = generaReport(true); 
