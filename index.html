@@ -2,7 +2,7 @@
 <html lang="it">
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-<title>Contatore Posto di Controllo - v1 Tasti 48px</title>
+<title>Contatore Posto di Controllo - V1 Avanzata</title>
 <style>
   /* BASE DI PARTENZA NATIVA: TOTAL BLACK */
   :root {
@@ -36,7 +36,7 @@
     background-color: var(--bg-main); 
     color: #f8fafc;
     text-align: center;
-    padding: 4px 10px calc(8px + env(safe-area-inset-bottom)); /* Ridotti leggermente i margini esterni */
+    padding: 4px 10px calc(8px + env(safe-area-inset-bottom));
     margin: 0;
     height: 100vh;
     height: -webkit-fill-available;
@@ -79,7 +79,7 @@
     justify-content: center;
   }
   
-  /* BLOCCO TARGHE (Tasti portati a 48px) */
+  /* BLOCCO TARGHE (Transito standard) */
   .top-tg-block {
     background: var(--bg-card);
     border-radius: 12px;
@@ -198,7 +198,7 @@
     transform: scale(0.95);
   }
   
-  /* TASTI +1 E -1 PORTATI A 48PX */
+  /* TASTI DEI CONTATORI A 48PX */
   .card button {
     font-size: 16px !important;   
     height: 48px !important;      
@@ -210,9 +210,8 @@
   .plus-sosta { background: #2563eb; color: white; flex: 1.8; } 
   .minus { background: #dc2626; color: white; flex: 1; } 
 
-  /* TASTO APPIEDATI PORTATO A 48PX */
-  .btn-appiedati {
-    background: #1d4ed8;
+  /* TASTI CENTRALI DI APERTURA PANNELLI (48PX) */
+  .btn-trigger-panel {
     color: white;
     width: 100%;
     height: 48px;
@@ -222,13 +221,14 @@
     border-radius: 10px;
     text-transform: uppercase;
     margin-bottom: 4px;
-    border: 1px solid #2563eb;
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 6px;
     flex-shrink: 0;
   }
+  .btn-pdc { background: #7c3aed; border: 1px solid #8b5cf6; } /* Viola Tattico */
+  .btn-appiedati { background: #1d4ed8; border: 1px solid #2563eb; } /* Blu Classico */
 
   /* FOOTER */
   .footer {
@@ -260,7 +260,6 @@
     color: #38bdf8;
   }
   
-  /* 3 TASTI INFERIORI PORTATI A 48PX */
   .action-btns { 
     display: flex; 
     gap: 4px; 
@@ -271,7 +270,7 @@
   .undo { background: #4b5563; color: white; flex: 0.8; font-size: 18px; border-radius: 8px; height: 100%; }
   .reset { background: #b45309; color: white; flex: 0.8; font-size: 18px; border-radius: 8px; height: 100%; }
 
-  /* POPUP MODAL APPIEDATI */
+  /* POPUP SCHERMATE APPIEDATI E POSTO DI CONTROLLO */
   .modal-overlay {
     position: fixed;
     top: 0; left: 0; width: 100%; height: 100%;
@@ -312,7 +311,7 @@
 <body>
 
 <div class="header-area">
-  <h2>Posto di Controllo v1</h2>
+  <h2>Posto di Controllo V1</h2>
   <button class="btn-mode" id="mode-icon" onclick="toggleModalita()">🔵</button>
 </div>
 
@@ -371,7 +370,8 @@
   </div>
 </div>
 
-<button class="btn-appiedati" onclick="apriModal()">🚶 Appiedati</button>
+<button class="btn-trigger-panel btn-pdc" onclick="apriModal('modalPdc')">🚨 Posto di Controllo</button>
+<button class="btn-trigger-panel btn-appiedati" onclick="apriModal('modalAppiedati')">🚶 Appiedati</button>
 
 <div class="footer">
   <div class="summary" id="riepilogo">Nessun controllo effettuato</div>
@@ -382,10 +382,71 @@
   </div>
 </div>
 
+<div class="modal-overlay" id="modalPdc">
+  <div class="modal-content">
+    <h2 style="color:#a78bfa; margin:2px 0 6px 0; font-size:15px;">🚨 Attività Posto di Controllo</h2>
+    
+    <div class="top-tg-block" style="margin-bottom: 4px;">
+      <div class="tg-side-btns">
+        <button class="plus-sosta btn-tg-v" onclick="cambia('pdcTgSosta',1)">+1 S</button>
+        <button class="minus btn-tg-v" onclick="cambia('pdcTgSosta',-1)">-1 S</button>
+      </div>
+      <div class="tg-center-display">
+        <div class="tg-label-num">Sosta: <span id="val-pdcTgSosta">0</span></div>
+        <div class="tg-label-num">Occupanti: <span id="val-pdcTg">0</span></div>
+      </div>
+      <div class="tg-side-btns">
+        <button class="plus btn-tg-v" onclick="cambia('pdcTg',1)">+1 O</button>
+        <button class="minus btn-tg-v" onclick="cambia('pdcTg',-1)">-1 O</button>
+      </div>
+    </div>
+
+    <div style="display: flex; flex-direction: column; gap: 6px; flex-grow: 1; margin-bottom:6px;">
+      <div class="flex-row">
+        <div class="card pos-highlight">
+          <h3>Ita Pos</h3>
+          <div class="num" id="val-pdcItaPos">0</div>
+          <div class="btn-container">
+            <button class="minus" onclick="cambia('pdcItaPos',-1)">-1</button>
+            <button class="plus" onclick="cambia('pdcItaPos',1)">+1</button>
+          </div>
+        </div>
+        <div class="card">
+          <h3>Ita Neg</h3>
+          <div class="num" id="val-pdcItaNeg">0</div>
+          <div class="btn-container">
+            <button class="minus" onclick="cambia('pdcItaNeg',-1)">-1</button>
+            <button class="plus" onclick="cambia('pdcItaNeg',1)">+1</button>
+          </div>
+        </div>
+      </div>
+      <div class="flex-row">
+        <div class="card pos-highlight">
+          <h3>Stra Pos</h3>
+          <div class="num" id="val-pdcStraPos">0</div>
+          <div class="btn-container">
+            <button class="minus" onclick="cambia('pdcStraPos',-1)">-1</button>
+            <button class="plus" onclick="cambia('pdcStraPos',1)">+1</button>
+          </div>
+        </div>
+        <div class="card">
+          <h3>Stra Neg</h3>
+          <div class="num" id="val-pdcStraNeg">0</div>
+          <div class="btn-container">
+            <button class="minus" onclick="cambia('pdcStraNeg',-1)">-1</button>
+            <button class="plus" onclick="cambia('pdcStraNeg',1)">+1</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <button class="btn-chiudi-modal" onclick="chiudiModal('modalPdc')">Fatto</button>
+  </div>
+</div>
+
 <div class="modal-overlay" id="modalAppiedati">
   <div class="modal-content">
-    <h2 style="color:#38bdf8; margin:2px 0 6px 0; font-size:15px;">Controlli Appiedati</h2>
-    <div style="display: flex; flex-direction: column; gap: 6px; flex-grow: 1; margin-bottom:6px;">
+    <h2 style="color:#38bdf8; margin:4px 0 6px 0; font-size:15px;">Controlli Appiedati</h2>
+    <div style="display: flex; flex-direction: column; gap: 6px; flex-grow: 1; margin-bottom:8px;">
       <div class="flex-row">
         <div class="card pos-highlight">
           <h3>Ita Pos</h3>
@@ -423,23 +484,32 @@
         </div>
       </div>
     </div>
-    <button class="btn-chiudi-modal" onclick="chiudiModal()">Fatto</button>
+    <button class="btn-chiudi-modal" onclick="chiudiModal('modalAppiedati')">Fatto</button>
   </div>
 </div>
 
 <script>
-let datiSalvati = JSON.parse(localStorage.getItem("contatore")) || {};
+let datiSalvati = JSON.parse(localStorage.getItem("contatoreV1")) || {};
 let dati = {
+  // Transito normale
   tgSosta: Number(datiSalvati.tgSosta) || 0,
   tg: Number(datiSalvati.tg) || 0,
   itaNeg: Number(datiSalvati.itaNeg) || 0,
   itaPos: Number(datiSalvati.itaPos) || 0,
   straPos: Number(datiSalvati.straPos) || 0,
   straNeg: Number(datiSalvati.straNeg) || 0,
+  // Appiedati
   apItaNeg: Number(datiSalvati.apItaNeg) || 0,
   apItaPos: Number(datiSalvati.apItaPos) || 0,
   apStraPos: Number(datiSalvati.apStraPos) || 0,
-  apStraNeg: Number(datiSalvati.apStraNeg) || 0
+  apStraNeg: Number(datiSalvati.apStraNeg) || 0,
+  // Posto di Controllo dedicato
+  pdcTgSosta: Number(datiSalvati.pdcTgSosta) || 0,
+  pdcTg: Number(datiSalvati.pdcTg) || 0,
+  pdcItaNeg: Number(datiSalvati.pdcItaNeg) || 0,
+  pdcItaPos: Number(datiSalvati.pdcItaPos) || 0,
+  pdcStraPos: Number(datiSalvati.pdcStraPos) || 0,
+  pdcStraNeg: Number(datiSalvati.pdcStraNeg) || 0
 };
 
 let cronologiaAzioni = [];
@@ -468,7 +538,7 @@ function toggleModalita() {
 }
 
 function salva() {
-  localStorage.setItem("contatore", JSON.stringify(dati));
+  localStorage.setItem("contatoreV1", JSON.stringify(dati));
 }
 
 function cambia(k, v, sbloccaUndo = true) {
@@ -491,33 +561,59 @@ function annulla() {
   aggiornaSchermata();
 }
 
-function apriModal() { feedbackTattico(); document.getElementById("modalAppiedati").style.display = "flex"; }
-function chiudiModal() { feedbackTattico(); document.getElementById("modalAppiedati").style.display = "none"; }
+function apriModal(id) { feedbackTattico(); document.getElementById(id).style.display = "flex"; }
+function chiudiModal(id) { feedbackTattico(); document.getElementById(id).style.display = "none"; }
 
 function testo() {
   let righe = [];
-  let pretzels = []; 
-  if (dati.apItaNeg > 0) pretzels.push(`${dati.apItaNeg} ita neg`);
-  if (dati.apItaPos > 0) pretzels.push(`${dati.apItaPos} ita pos`);
-  if (dati.apStraPos > 0) pretzels.push(`${dati.apStraPos} stra pos`);
-  if (dati.apStraNeg > 0) pretzels.push(`${dati.apStraNeg} stra neg`);
   
-  if (pretzels.length > 0) righe.push(`Appiedati: ${pretzels.join(", ")}`);
+  // 1. BLOCCO APPIEDATI
+  let detAp = []; 
+  if (dati.apItaNeg > 0) detAp.push(`${dati.apItaNeg} ita neg`);
+  if (dati.apItaPos > 0) detAp.push(`${dati.apItaPos} ita pos`);
+  if (dati.apStraPos > 0) detAp.push(`${dati.apStraPos} stra pos`);
+  if (dati.apStraNeg > 0) detAp.push(`${dati.apStraNeg} stra neg`);
+  if (detAp.length > 0) righe.push(`Appiedati: ${detAp.join(", ")}`);
+  
+  // 2. BLOCCO POSTO DI CONTROLLO (ISOLATO)
+  let righePdc = [];
+  if (dati.pdcTgSosta > 0) righePdc.push(`${dati.pdcTgSosta} tg`);
+  
+  let detPdcPersone = [];
+  if (dati.pdcItaNeg > 0) detPdcPersone.push(`${dati.pdcItaNeg} ita neg`);
+  if (dati.pdcItaPos > 0) detPdcPersone.push(`${dati.pdcItaPos} ita pos`);
+  if (dati.pdcStraPos > 0) detPdcPersone.push(`${dati.pdcStraPos} stra pos`);
+  if (dati.pdcStraNeg > 0) detPdcPersone.push(`${dati.pdcStraNeg} stra neg`);
+  
+  if (dati.pdcTg > 0) {
+    let stringaTg = `${dati.pdcTg} tg`;
+    if (detPdcPersone.length > 0) stringaTg += ` con ${detPdcPersone.join(", ")}`;
+    righePdc.push(stringaTg);
+  } else if (detPdcPersone.length > 0) {
+    righePdc.push(detPdcPersone.join(", "));
+  }
+  
+  if (righePdc.length > 0) {
+    righe.push(`Posto di controllo: ${righePdc.join(", ")}`);
+  }
+
+  // 3. BLOCCO AUTO IN TRANSITO STANDARD
   if (dati.tgSosta > 0) righe.push(`${dati.tgSosta} tg`);
   
-  let dettagliPersone = [];
-  if (dati.itaNeg > 0) dettagliPersone.push(`${dati.itaNeg} ita neg`);
-  if (dati.itaPos > 0) dettagliPersone.push(`${dati.itaPos} ita pos`);
-  if (dati.straPos > 0) dettagliPersone.push(`${dati.straPos} stra pos`);
-  if (dati.straNeg > 0) dettagliPersone.push(`${dati.straNeg} stra neg`);
+  let detTransitoPersone = [];
+  if (dati.itaNeg > 0) detTransitoPersone.push(`${dati.itaNeg} ita neg`);
+  if (dati.itaPos > 0) detTransitoPersone.push(`${dati.itaPos} ita pos`);
+  if (dati.straPos > 0) detTransitoPersone.push(`${dati.straPos} stra pos`);
+  if (dati.straNeg > 0) detTransitoPersone.push(`${dati.straNeg} stra neg`);
   
   if (dati.tg > 0) {
-    let rigaTgCon = `${dati.tg} tg`;
-    if (dettagliPersone.length > 0) rigaTgCon += ` con ${dettagliPersone.join(", ")}`;
-    righe.push(rigaTgCon);
-  } else if (dettagliPersone.length > 0) {
-    righe.push(dettagliPersone.join(", "));
+    let stringaTgTransito = `${dati.tg} tg`;
+    if (detTransitoPersone.length > 0) stringaTgTransito += ` con ${detTransitoPersone.join(", ")}`;
+    righe.push(stringaTgTransito);
+  } else if (detTransitoPersone.length > 0) {
+    righe.push(detTransitoPersone.join(", "));
   }
+
   return righe.length > 0 ? righe.join("\n") : "Nessun controllo effettuato";
 }
 
