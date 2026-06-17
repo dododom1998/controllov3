@@ -2,7 +2,7 @@
 <html lang="it">
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-<title>Contatore Posto di Controllo - V1 Pro</title>
+<title>Contatore Posto di Controllo - V1 Pro Ergonomica</title>
 <style>
   /* BASE DI PARTENZA NATIVA: TOTAL BLACK */
   :root {
@@ -185,6 +185,7 @@
   body.red-mode .num { color: #fca5a5; }
   body.red-mode .card.pos-highlight .num { color: #ef4444; }
   
+  /* DISTRIBUZIONE ASIMMETRICA TASTI (80% / 20%) */
   .btn-container {
     display: flex;
     gap: 4px;
@@ -209,9 +210,9 @@
     border-radius: 6px;
   }
   
-  .plus { background: #059669; color: white; flex: 1.8; } 
-  .plus-sosta { background: #2563eb; color: white; flex: 1.8; } 
-  .minus { background: #dc2626; color: white; flex: 1; } 
+  .plus { background: #059669; color: white; flex: 3.2; } /* Bersaglio Gigante (80%) */
+  .plus-sosta { background: #2563eb; color: white; flex: 3.2; } 
+  .minus { background: #dc2626; color: white; flex: 0.8; font-size: 14px !important; } /* Bersaglio Ridotto (20%) */
 
   body.red-mode .plus { background: #064e3b; color: #a7f3d0; }
   body.red-mode .plus-sosta { background: #1e3a8a; color: #bfdbfe; }
@@ -270,7 +271,6 @@
     color: #f87171;
   }
   
-  /* RIGA PULSANTI AZIONE CON COPIA VELOCE */
   .action-btns { 
     display: flex; 
     gap: 4px; 
@@ -349,7 +349,7 @@
   </div>
 </div>
 
-<!-- AUTO IN TRANSITO: GRIGLIA CONTATORI STANDARD -->
+<!-- AUTO IN TRANSITO: GRIGLIA CENTRALE CONTATORI (ASIMMETRICA) -->
 <div class="flex-grid">
   <div class="flex-row">
     <div class="card pos-highlight">
