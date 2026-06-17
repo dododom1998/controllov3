@@ -2,7 +2,7 @@
 <html lang="it">
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-<title>Contatore Posto di Controllo - V1 Pro Ergonomica</title>
+<title>Contatore Posto di Controllo - V1 Pro Smart</title>
 <style>
   /* BASE DI PARTENZA NATIVA: TOTAL BLACK */
   :root {
@@ -210,9 +210,9 @@
     border-radius: 6px;
   }
   
-  .plus { background: #059669; color: white; flex: 3.2; } /* Bersaglio Gigante (80%) */
+  .plus { background: #059669; color: white; flex: 3.2; } 
   .plus-sosta { background: #2563eb; color: white; flex: 3.2; } 
-  .minus { background: #dc2626; color: white; flex: 0.8; font-size: 14px !important; } /* Bersaglio Ridotto (20%) */
+  .minus { background: #dc2626; color: white; flex: 0.8; font-size: 14px !important; } 
 
   body.red-mode .plus { background: #064e3b; color: #a7f3d0; }
   body.red-mode .plus-sosta { background: #1e3a8a; color: #bfdbfe; }
@@ -349,7 +349,7 @@
   </div>
 </div>
 
-<!-- AUTO IN TRANSITO: GRIGLIA CENTRALE CONTATORI (ASIMMETRICA) -->
+<!-- AUTO IN TRANSITO: GRIGLIA CENTRALE CONTATORI -->
 <div class="flex-grid">
   <div class="flex-row">
     <div class="card pos-highlight">
@@ -585,46 +585,51 @@ function annulla() {
 function apriModal(id) { feedbackTattico(); document.getElementById(id).style.display = "flex"; }
 function chiudiModal(id) { feedbackTattico(); document.getElementById(id).style.display = "none"; }
 
-function testo() {
+// Genera il testo (con o senza asterischi per il grassetto di WhatsApp)
+function generaReport(usaGrassetto = false) {
   let righe = [];
+  const b = usaGrassetto ? "*" : "";
   
+  // 1. APPIEDATI
   let detAp = []; 
-  if (dati.apItaNeg > 0) detAp.push(`${dati.apItaNeg} ita neg`);
-  if (dati.apItaPos > 0) detAp.push(`${dati.apItaPos} ita pos`);
-  if (dati.apStraPos > 0) detAp.push(`${dati.apStraPos} stra pos`);
-  if (dati.apStraNeg > 0) detAp.push(`${dati.apStraNeg} stra neg`);
-  if (detAp.length > 0) righe.push(`Appiedati: ${detAp.join(", ")}`);
+  if (dati.apItaNeg > 0) detAp.push(`${b}${dati.apItaNeg}${b} ita neg`);
+  if (dati.apItaPos > 0) detAp.push(`${b}${dati.apItaPos}${b} ita pos`);
+  if (dati.apStraPos > 0) detAp.push(`${b}${dati.apStraPos}${b} stra pos`);
+  if (dati.apStraNeg > 0) detAp.push(`${b}${dati.apStraNeg} stra neg`);
+  if (detAp.length > 0) righe.push(`${b}Appiedati:${b} ${detAp.join(", ")}`);
   
+  // 2. POSTO DI CONTROLOLO
   let righePdc = [];
-  if (dati.pdcTgSosta > 0) righePdc.push(`${dati.pdcTgSosta} tg`);
+  if (dati.pdcTgSosta > 0) righePdc.push(`${b}${dati.pdcTgSosta}${b} tg`);
   
   let detPdcPersone = [];
-  if (dati.pdcItaNeg > 0) detPdcPersone.push(`${dati.pdcItaNeg} ita neg`);
-  if (dati.pdcItaPos > 0) detPdcPersone.push(`${dati.pdcItaPos} ita pos`);
-  if (dati.pdcStraPos > 0) detPdcPersone.push(`${dati.pdcStraPos} stra pos`);
-  if (dati.pdcStraNeg > 0) detPdcPersone.push(`${dati.pdcStraNeg} stra neg`);
+  if (dati.pdcItaNeg > 0) detPdcPersone.push(`${b}${dati.pdcItaNeg}${b} ita neg`);
+  if (dati.pdcItaPos > 0) detPdcPersone.push(`${b}${dati.pdcItaPos}${b} ita pos`);
+  if (dati.pdcStraPos > 0) detPdcPersone.push(`${b}${dati.pdcStraPos}${b} stra pos`);
+  if (dati.pdcStraNeg > 0) detPdcPersone.push(`${b}${dati.pdcStraNeg}${b} stra neg`);
   
   if (dati.pdcTg > 0) {
-    let stringaTg = `${dati.pdcTg} tg`;
+    let stringaTg = `${b}${dati.pdcTg}${b} tg`;
     if (detPdcPersone.length > 0) stringaTg += ` con ${detPdcPersone.join(", ")}`;
     righePdc.push(stringaTg);
   } else if (detPdcPersone.length > 0) {
     righePdc.push(detPdcPersone.join(", "));
   }
   if (righePdc.length > 0) {
-    righe.push(`Posto di controllo: ${righePdc.join(", ")}`);
+    righe.push(`${b}Posto di controllo:${b} ${righePdc.join(", ")}`);
   }
 
-  if (dati.tgSosta > 0) righe.push(`${dati.tgSosta} tg`);
+  // 3. AUTO IN TRANSITO (STANDARD)
+  if (dati.tgSosta > 0) righe.push(`${b}${dati.tgSosta}${b} tg`);
   
   let detTransitoPersone = [];
-  if (dati.itaNeg > 0) detTransitoPersone.push(`${dati.itaNeg} ita neg`);
-  if (dati.itaPos > 0) detTransitoPersone.push(`${dati.itaPos} ita pos`);
-  if (dati.straPos > 0) detTransitoPersone.push(`${dati.straPos} stra pos`);
-  if (dati.straNeg > 0) detTransitoPersone.push(`${dati.straNeg} stra neg`);
+  if (dati.itaNeg > 0) detTransitoPersone.push(`${b}${dati.itaNeg}${b} ita neg`);
+  if (dati.itaPos > 0) detTransitoPersone.push(`${b}${dati.itaPos}${b} ita pos`);
+  if (dati.straPos > 0) detTransitoPersone.push(`${b}${dati.straPos}${b} stra pos`);
+  if (dati.straNeg > 0) detTransitoPersone.push(`${b}${dati.straNeg}${b} stra neg`);
   
   if (dati.tg > 0) {
-    let stringaTgTransito = `${dati.tg} tg`;
+    let stringaTgTransito = `${b}${dati.tg}${b} tg`;
     if (detTransitoPersone.length > 0) stringaTgTransito += ` con ${detTransitoPersone.join(", ")}`;
     righe.push(stringaTgTransito);
   } else if (detTransitoPersone.length > 0) {
@@ -639,7 +644,8 @@ function aggiornaSchermata() {
     let el = document.getElementById(`val-${k}`);
     if(el) el.innerText = dati[k];
   }
-  document.getElementById("riepilogo").innerText = testo();
+  // Sul display dell'app mostra il testo liscio senza asterischi
+  document.getElementById("riepilogo").innerText = generaReport(false);
   
   let btnUndo = document.getElementById("btn-undo");
   btnUndo.style.opacity = cronologiaAzioni.length > 0 ? "1" : "0.3";
@@ -647,13 +653,13 @@ function aggiornaSchermata() {
 
 function inviaWhatsApp() {
   feedbackTattico();
-  const t = testo();
+  const t = generaReport(true); // Genera con i grassetti per WhatsApp
   window.location.href = "whatsapp://send?text=" + encodeURIComponent(t);
 }
 
 function copiaTesto() {
   feedbackTattico();
-  const t = testo();
+  const t = generaReport(true); // Genera con i grassetti per WhatsApp
   navigator.clipboard.writeText(t).then(() => {
     const btn = document.getElementById("btn-copia");
     const testoOriginale = btn.innerText;
