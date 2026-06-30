@@ -250,7 +250,7 @@
   }
   
   .summary { 
-    font-size: 12px; 
+    font-size: 11px; 
     background: #050505; 
     padding: 6px 10px; 
     border-radius: 8px; 
@@ -324,6 +324,21 @@
     justify-content: center;
   }
   body.red-mode .btn-chiudi-modal { background: #991b1b; color: #fca5a5; }
+
+  /* BLOCCO VEICOLI SEMPLIFICATO PER IL PDC */
+  .pdc-tg-block {
+    background: var(--bg-card);
+    border-radius: 12px;
+    padding: 6px 12px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-sizing: border-box;
+    border: 1px solid var(--border-card);
+    height: 64px; 
+    margin-bottom: 4px;
+    flex-shrink: 0;
+  }
 </style>
 </head>
 <body>
@@ -333,6 +348,7 @@
   <button class="btn-mode" id="mode-icon" onclick="toggleModalita()">🔴</button>
 </div>
 
+<!-- AUTO IN TRANSITO/SOSTA: BLOCCO TARGHE STANDARD -->
 <div class="top-tg-block">
   <div class="tg-side-btns">
     <button class="plus-sosta btn-tg-v" onclick="cambia('tgSosta',1)">+1 S</button>
@@ -348,6 +364,7 @@
   </div>
 </div>
 
+<!-- AUTO IN TRANSITO/SOSTA: GRIGLIA CENTRALE CONTATORI -->
 <div class="flex-grid">
   <div class="flex-row">
     <div class="card pos-highlight">
@@ -391,6 +408,7 @@
 <button class="btn-trigger-panel btn-pdc" onclick="apriModal('modalPdc')">🚨 Posto di Controllo</button>
 <button class="btn-trigger-panel btn-appiedati" onclick="apriModal('modalAppiedati')">🚶 Appiedati</button>
 
+<!-- FOOTER -->
 <div class="footer">
   <div class="summary" id="riepilogo">Nessun controllo effettuato</div>
   <div class="action-btns">
@@ -401,23 +419,15 @@
   </div>
 </div>
 
+<!-- PANNELLO COMPLAIN: POSTO DI CONTROLLO -->
 <div class="modal-overlay" id="modalPdc">
   <div class="modal-content">
     <h2 style="color:#a78bfa; margin:2px 0 6px 0; font-size:15px;">🚨 Attività Posto di Controllo</h2>
     
-    <div class="top-tg-block" style="margin-bottom: 4px;">
-      <div class="tg-side-btns">
-        <button class="plus-sosta btn-tg-v" onclick="cambia('pdcTgSosta',1)">+1 S</button>
-        <button class="minus btn-tg-v" onclick="cambia('pdcTgSosta',-1)">-1 S</button>
-      </div>
-      <div class="tg-center-display">
-        <div class="tg-label-num">Sosta: <span id="val-pdcTgSosta">0</span></div>
-        <div class="tg-label-num">Occupanti: <span id="val-pdcTg">0</span></div>
-      </div>
-      <div class="tg-side-btns">
-        <button class="plus btn-tg-v" onclick="cambia('pdcTg',1)">+1 O</button>
-        <button class="minus btn-tg-v" onclick="cambia('pdcTg',-1)">-1 O</button>
-      </div>
+    <div class="pdc-tg-block">
+      <button class="minus" style="height:48px; width:48px; border-radius:8px;" onclick="cambia('pdcTg',-1)">-1</button>
+      <div style="font-size:14px; color:#cbd5e1; font-weight:bold;">Veicoli Controllati: <span id="val-pdcTg" style="font-size:22px; font-weight:800; color:#fff; margin-left:6px;">0</span></div>
+      <button class="plus" style="height:48px; width:64px; border-radius:8px;" onclick="cambia('pdcTg',1)">+1</button>
     </div>
 
     <div style="display: flex; flex-direction: column; gap: 6px; flex-grow: 1; margin-bottom:6px;">
@@ -462,6 +472,7 @@
   </div>
 </div>
 
+<!-- PANNELLO COMPLAIN: APPIEDATI (BUGFIX DETTAGLI) -->
 <div class="modal-overlay" id="modalAppiedati">
   <div class="modal-content">
     <h2 style="color:#38bdf8; margin:4px 0 6px 0; font-size:15px;">Controlli Appiedati</h2>
@@ -520,7 +531,6 @@ let dati = {
   apItaPos: Number(datiSalvati.apItaPos) || 0,
   apStraPos: Number(datiSalvati.apStraPos) || 0,
   apStraNeg: Number(datiSalvati.apStraNeg) || 0,
-  pdcTgSosta: Number(datiSalvati.pdcTgSosta) || 0,
   pdcTg: Number(datiSalvati.pdcTg) || 0,
   pdcItaNeg: Number(datiSalvati.pdcItaNeg) || 0,
   pdcItaPos: Number(datiSalvati.pdcItaPos) || 0,
@@ -580,65 +590,53 @@ function annulla() {
 function apriModal(id) { feedbackTattico(); document.getElementById(id).style.display = "flex"; }
 function chiudiModal(id) { feedbackTattico(); document.getElementById(id).style.display = "none"; }
 
-// Genera il report rispettando l'ordine logico richiesto
 function generaReport(usaGrassetto = false) {
-  let righe = [];
+  let macroBlocchi = [];
   const b = usaGrassetto ? "*" : "";
   
-  // RIGA 1: POSTO DI CONTROLLO (In cima, con intestazione fissa in GRASSETTO)
-  let righePdc = [];
-  if (dati.pdcTgSosta > 0) righePdc.push(`${b}${dati.pdcTgSosta}${b} tg`);
-  
+  // 1. MACRO BLOCCO: POSTO DI CONTROLLO
   let detPdcPersone = [];
   if (dati.pdcItaNeg > 0) detPdcPersone.push(`${b}${dati.pdcItaNeg}${b} ita neg`);
   if (dati.pdcItaPos > 0) detPdcPersone.push(`${b}${dati.pdcItaPos}${b} ita pos`);
   if (dati.pdcStraPos > 0) detPdcPersone.push(`${b}${dati.pdcStraPos}${b} stra pos`);
   if (dati.pdcStraNeg > 0) detPdcPersone.push(`${b}${dati.pdcStraNeg}${b} stra neg`);
   
-  if (dati.pdcTg > 0) {
-    let stringaTg = `${b}${dati.pdcTg}${b} tg`;
-    if (detPdcPersone.length > 0) stringaTg += ` con ${detPdcPersone.join(", ")}`;
-    righePdc.push(stringaTg);
-  } else if (detPdcPersone.length > 0) {
-    righePdc.push(detPdcPersone.join(", "));
-  }
-  if (righePdc.length > 0) {
-    righe.push(`${b}POSTO DI CONTROLLO:${b} ${righePdc.join(", ")}`);
+  if (detPdcPersone.length > 0) {
+    macroBlocchi.push(`${b}POSTO DI CONTROLLO:${b} ${b}${dati.pdcTg}${b} tg con ${detPdcPersone.join(", ")}`);
+  } else if (dati.pdcTg > 0) {
+    macroBlocchi.push(`${b}POSTO DI CONTROLLO:${b} ${b}${dati.pdcTg}${b} tg`);
   }
 
-  // RIGA 2: APPIEDATI (Subito sotto al PDC, senza scritte fisse davanti)
+  // 2. MACRO BLOCCO: APPIEDATI
   let detAp = []; 
   if (dati.apItaNeg > 0) detAp.push(`${b}${dati.apItaNeg}${b} ita neg`);
   if (dati.apItaPos > 0) detAp.push(`${b}${dati.apItaPos}${b} ita pos`);
   if (dati.apStraPos > 0) detAp.push(`${b}${dati.apStraPos}${b} stra pos`);
   if (dati.apStraNeg > 0) detAp.push(`${b}${dati.apStraNeg}${b} stra neg`);
+  
   if (detAp.length > 0) {
-    righe.push(detAp.join(", "));
+    macroBlocchi.push(detAp.join(", "));
   }
   
-  // RIGA 3: TRANSITO/SOSTA (In fondo, senza scritte fisse davanti)
-  let righeTransitoSosta = [];
-  if (dati.tgSosta > 0) righeTransitoSosta.push(`${b}${dati.tgSosta}${b} tg`);
+  // 3. MACRO BLOCCO INDIPENDENTE: TARGHE IN SOSTA
+  if (dati.tgSosta > 0) {
+    macroBlocchi.push(`${b}${dati.tgSosta}${b} tg`);
+  }
   
+  // 4. MACRO BLOCCO INDIPENDENTE: TARGHE IN TRANSITO
   let detTransitoPersone = [];
   if (dati.itaNeg > 0) detTransitoPersone.push(`${b}${dati.itaNeg}${b} ita neg`);
   if (dati.itaPos > 0) detTransitoPersone.push(`${b}${dati.itaPos}${b} ita pos`);
   if (dati.straPos > 0) detTransitoPersone.push(`${b}${dati.straPos}${b} stra pos`);
   if (dati.straNeg > 0) detTransitoPersone.push(`${b}${dati.straNeg}${b} stra neg`);
   
-  if (dati.tg > 0) {
-    let stringaTgTransito = `${b}${dati.tg}${b} tg`;
-    if (detTransitoPersone.length > 0) stringaTgTransito += ` con ${detTransitoPersone.join(", ")}`;
-    righeTransitoSosta.push(stringaTgTransito);
-  } else if (detTransitoPersone.length > 0) {
-    righeTransitoSosta.push(detTransitoPersone.join(", "));
+  if (detTransitoPersone.length > 0) {
+    macroBlocchi.push(`${b}${dati.tg}${b} tg con ${detTransitoPersone.join(", ")}`);
+  } else if (dati.tg > 0) {
+    macroBlocchi.push(`${b}${dati.tg}${b} tg`);
   }
 
-  if (righeTransitoSosta.length > 0) {
-    righe.push(righeTransitoSosta.join(", "));
-  }
-
-  return righe.length > 0 ? righe.join("\n") : "Nessun controllo effettuato";
+  return macroBlocchi.length > 0 ? macroBlocchi.join("\n\n") : "Nessun controllo effettuato";
 }
 
 function aggiornaSchermata() {
@@ -658,7 +656,6 @@ function inviaWhatsApp() {
   window.location.href = "whatsapp://send?text=" + encodeURIComponent(t);
 }
 
-// Copia il testo formattato
 function copiaTesto() {
   feedbackTattico();
   const t = generaReport(true); 
