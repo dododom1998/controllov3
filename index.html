@@ -593,24 +593,6 @@ let dati = {
 
 let cronologiaAzioni = [];
 
-// --- RILEVAMENTO NUOVO TURNO / GIORNO DIVERSO ---
-(function controllaNuovoGiorno() {
-  const oggi = new Date().toISOString().slice(0, 10);
-  const ultimaData = localStorage.getItem("contatoreV1_data");
-  const contieneDati = Object.values(dati).some(v => v > 0);
-  if (ultimaData && ultimaData !== oggi && contieneDati) {
-    const vuoiAzzerare = confirm(
-      `I contatori risalgono al ${ultimaData}.\nVuoi azzerarli per iniziare il nuovo turno?`
-    );
-    if (vuoiAzzerare) {
-      for (let k in dati) dati[k] = 0;
-      cronologiaAzioni = [];
-    }
-  }
-  localStorage.setItem("contatoreV1_data", oggi);
-  localStorage.setItem("contatoreV1", JSON.stringify(dati));
-})();
-
 // --- AUDIO CONTEXT RIUTILIZZABILE (creato una sola volta) ---
 let audioCtx = null;
 function feedbackTattico() {
@@ -646,7 +628,6 @@ function toggleModalita() {
 
 function salva() {
   localStorage.setItem("contatoreV1", JSON.stringify(dati));
-  localStorage.setItem("contatoreV1_data", new Date().toISOString().slice(0, 10));
 }
 
 function cambia(k, v, sbloccaUndo = true) {
