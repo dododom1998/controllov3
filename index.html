@@ -2,26 +2,26 @@
 <html lang="it">
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-<title>Contatore Watch OS</title>
+<title>Contatore Ultra MAX</title>
 <style>
   :root {
     --bg-main: #000000;
-    --bg-card: #121212;
-    --border-card: #222222;
-    --text-title: #888888;
+    --bg-card: #141414;
+    --border-card: #262626;
+    --text-title: #94a3b8;
     --pos-highlight: #450a0a;
-    --pos-border: #7f1d1d;
+    --pos-border: #991b1b;
     --text-main: #f8fafc;
-    --accent: #0ea5e9;
+    --accent: #38bdf8;
   }
 
   body.red-mode {
-    --bg-card: #1a0505;
-    --border-card: #3b0707;
-    --text-title: #991b1b;
-    --pos-highlight: #5c0707;
-    --pos-border: #991b1b;
-    --text-main: #fca5a5;
+    --bg-card: #1c0505;
+    --border-card: #450a0a;
+    --text-title: #fca5a5;
+    --pos-highlight: #6b0707;
+    --pos-border: #b91c1c;
+    --text-main: #fee2e2;
     --accent: #ef4444;
   }
 
@@ -36,116 +36,139 @@
     box-sizing: border-box;
   }
 
-  /* Scorrimento fluido per la Digital Crown */
   .watch-container {
-    padding: 6px 4px calc(20px + env(safe-area-inset-bottom)) 4px;
+    padding: 4px 2px calc(30px + env(safe-area-inset-bottom)) 2px;
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 10px; /* Più spazio tra i blocchi */
   }
 
-  /* HEADER COMPATTO */
+  /* HEADER */
   .header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 0 4px;
-    height: 20px;
+    padding: 0 6px;
+    height: 24px;
   }
-  .header h2 { font-size: 11px; margin: 0; color: var(--text-title); text-transform: uppercase; }
+  .header h2 { font-size: 12px; margin: 0; color: var(--text-title); text-transform: uppercase; letter-spacing: 0.5px; }
   .btn-mode {
     background: var(--bg-card);
     border: 1px solid var(--border-card);
     border-radius: 50%;
-    width: 20px; height: 20px;
-    font-size: 9px;
-    display: flex; align-items: center; justify-content: center;
-    color: #fff;
-  }
-  body.red-mode .btn-mode { color: #ef4444; }
-
-  /* SEZIONI SCHERMO */
-  .section-divider {
+    width: 22px; height: 22px;
     font-size: 10px;
-    font-weight: bold;
+    display: flex; align-items: center; justify-content: center;
+  }
+
+  .section-divider {
+    font-size: 11px;
+    font-weight: 900;
     color: var(--accent);
     text-transform: uppercase;
     text-align: left;
-    padding-left: 4px;
-    margin-top: 4px;
-    border-left: 2px solid var(--accent);
+    padding-left: 6px;
+    margin-top: 6px;
+    border-left: 3px solid var(--accent);
   }
 
-  /* RIGA CONTATORE APPIATTITA */
+  /* BLOCCO COMANDO MAXI */
   .watch-row {
-    background: var(--bg-card);
-    border: 1px solid var(--border-card);
-    border-radius: 10px;
     display: flex;
-    align-items: center;
-    height: 46px;
-    overflow: hidden;
-  }
-  .watch-row.highlight {
-    background: var(--pos-highlight);
-    border-color: var(--pos-border);
+    gap: 3px;
+    height: 56px; /* Altezza massimizzata per il touch */
+    width: 100%;
   }
 
-  .row-label {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    pointer-events: none;
-  }
-  .row-label h3 { margin: 0; font-size: 10px; color: var(--text-title); text-transform: uppercase; }
-  .row-label .num { font-size: 20px; font-weight: 800; color: #fff; line-height: 1.1; }
-  body.red-mode .row-label .num { color: var(--text-main); }
-
-  /* PULSANTI OPERATIVI */
   button {
     border: 0;
     height: 100%;
     font-weight: bold;
     touch-action: manipulation;
     cursor: pointer;
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
   }
-  button:active { opacity: 0.7; }
+  button:active { opacity: 0.6; }
 
-  .btn-minus { background: #262626; color: #ef4444; width: 38px; font-size: 14px; }
-  .btn-plus { background: #059669; color: white; width: 52px; font-size: 16px; }
-  .btn-plus-sosta { background: #2563eb; color: white; width: 52px; font-size: 16px; }
+  /* TASTO MENO (30% Larghezza) */
+  .btn-minus { 
+    background: #262626; 
+    color: #ef4444; 
+    width: 28%; 
+    font-size: 20px; 
+  }
+  
+  /* TASTO PIÙ (72% Larghezza) con info interna */
+  .btn-plus-main { 
+    width: 72%; 
+    background: #059669; 
+    color: white; 
+    padding: 2px 4px;
+  }
+  .btn-plus-sosta { 
+    width: 72%; 
+    background: #2563eb; 
+    color: white; 
+    padding: 2px 4px;
+  }
 
-  body.red-mode .btn-minus { background: #2d0606; color: #fca5a5; }
-  body.red-mode .btn-plus { background: #064e3b; color: #a7f3d0; }
+  body.red-mode .btn-minus { background: #3b0707; color: #fca5a5; }
+  body.red-mode .btn-plus-main { background: #064e3b; color: #a7f3d0; }
   body.red-mode .btn-plus-sosta { background: #1e3a8a; color: #bfdbfe; }
 
-  /* AREA UTILITY IN FONDO */
+  /* Elementi di testo dentro il tastone */
+  .btn-title {
+    font-size: 9px;
+    text-transform: uppercase;
+    opacity: 0.85;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+  }
+  .btn-num {
+    font-size: 24px;
+    font-weight: 900;
+    line-height: 1;
+    margin-top: 1px;
+  }
+
+  /* EVIDENZIAZIONE POSTO HIGHLIGHT */
+  .highlight .btn-plus-main {
+    background: #b91c1c;
+  }
+  body.red-mode .highlight .btn-plus-main {
+    background: #991b1b;
+    border: 1px solid #ef4444;
+  }
+
+  /* OUTPUT IN FONDO */
   .summary-box {
-    background: #090909;
-    border: 1px solid #151515;
-    border-radius: 8px;
-    padding: 6px;
-    font-size: 10px;
+    background: #070707;
+    border: 1px solid #1a1a1a;
+    border-radius: 10px;
+    padding: 8px;
+    font-size: 11px;
     font-family: monospace;
     text-align: left;
     white-space: pre-line;
-    color: #0ea5e9;
+    color: #38bdf8;
   }
-  body.red-mode .summary-box { background: #0f0202; border-color: #250404; color: #f87171; }
+  body.red-mode .summary-box { background: #110202; border-color: #2d0606; color: #f87171; }
 
   .footer-actions {
     display: flex;
     gap: 4px;
-    height: 40px;
+    height: 44px;
   }
-  .btn-action { font-size: 11px; border-radius: 8px; color: white; display: flex; align-items: center; justify-content: center; flex: 1; }
+  .btn-action { font-size: 14px; border-radius: 10px; color: white; flex: 1; }
   .wsp { background: #16a34a; }
   .cpy { background: #0284c7; }
   .cpy.success { background: #15803d !important; }
-  .und { background: #4b5563; flex: 0.5; font-size: 14px; }
-  .rst { background: #b45309; flex: 0.5; font-size: 14px; }
+  .und { background: #4b5563; flex: 0.6; font-size: 16px; }
+  .rst { background: #b45309; flex: 0.6; font-size: 16px; }
 
   body.red-mode .wsp { background: #064e3b; color: #a7f3d0; }
   body.red-mode .cpy { background: #0369a1; color: #bae6fd; }
@@ -157,113 +180,138 @@
 
 <div class="watch-container">
   
-  <!-- HEADER -->
   <div class="header">
-    <h2>Memb. Ultra V1</h2>
+    <h2>Memb. Ultra MAX</h2>
     <button class="btn-mode" id="mode-icon" onclick="toggleModalita()">🔴</button>
   </div>
 
-  <!-- SEZIONE: TRANSITO / SOSTA -->
   <div class="section-divider">Transito / Sosta</div>
   
   <div class="watch-row">
     <button class="btn-minus" onclick="cambia('tgSosta',-1)">-</button>
-    <div class="row-label"><h3>Targhe S.</h3><div class="num" id="val-tgSosta">0</div></div>
-    <button class="btn-plus-sosta" onclick="cambia('tgSosta',1)">+S</button>
+    <button class="btn-plus-sosta" onclick="cambia('tgSosta',1)">
+      <span class="btn-title">Targhe Sosta</span>
+      <span class="btn-num" id="val-tgSosta">0</span>
+    </button>
   </div>
 
   <div class="watch-row">
     <button class="btn-minus" onclick="cambia('tg',-1)">-</button>
-    <div class="row-label"><h3>Occ. Tra.</h3><div class="num" id="val-tg">0</div></div>
-    <button class="btn-plus" onclick="cambia('tg',1)">+O</button>
+    <button class="btn-plus-main" onclick="cambia('tg',1)">
+      <span class="btn-title">Occupanti Transito</span>
+      <span class="btn-num" id="val-tg">0</span>
+    </button>
   </div>
 
   <div class="watch-row highlight">
     <button class="btn-minus" onclick="cambia('itaPos',-1)">-</button>
-    <div class="row-label"><h3>Ita Pos</h3><div class="num" id="val-itaPos">0</div></div>
-    <button class="btn-plus" onclick="cambia('itaPos',1)">+1</button>
+    <button class="btn-plus-main" onclick="cambia('itaPos',1)">
+      <span class="btn-title">Ita Pos</span>
+      <span class="btn-num" id="val-itaPos">0</span>
+    </button>
   </div>
 
   <div class="watch-row">
     <button class="btn-minus" onclick="cambia('itaNeg',-1)">-</button>
-    <div class="row-label"><h3>Ita Neg</h3><div class="num" id="val-itaNeg">0</div></div>
-    <button class="btn-plus" onclick="cambia('itaNeg',1)">+1</button>
+    <button class="btn-plus-main" onclick="cambia('itaNeg',1)">
+      <span class="btn-title">Ita Neg</span>
+      <span class="btn-num" id="val-itaNeg">0</span>
+    </button>
   </div>
 
   <div class="watch-row highlight">
     <button class="btn-minus" onclick="cambia('straPos',-1)">-</button>
-    <div class="row-label"><h3>Stra Pos</h3><div class="num" id="val-straPos">0</div></div>
-    <button class="btn-plus" onclick="cambia('straPos',1)">+1</button>
+    <button class="btn-plus-main" onclick="cambia('straPos',1)">
+      <span class="btn-title">Stra Pos</span>
+      <span class="btn-num" id="val-straPos">0</span>
+    </button>
   </div>
 
   <div class="watch-row">
     <button class="btn-minus" onclick="cambia('straNeg',-1)">-</button>
-    <div class="row-label"><h3>Stra Neg</h3><div class="num" id="val-straNeg">0</div></div>
-    <button class="btn-plus" onclick="cambia('straNeg',1)">+1</button>
+    <button class="btn-plus-main" onclick="cambia('straNeg',1)">
+      <span class="btn-title">Stra Neg</span>
+      <span class="btn-num" id="val-straNeg">0</span>
+    </button>
   </div>
 
-  <!-- SEZIONE: POSTO DI CONTROLLO -->
   <div class="section-divider">Posto di Controllo</div>
 
   <div class="watch-row">
     <button class="btn-minus" onclick="cambia('pdcTg',-1)">-</button>
-    <div class="row-label"><h3>Veicoli PdC</h3><div class="num" id="val-pdcTg">0</div></div>
-    <button class="btn-plus" onclick="cambia('pdcTg',1)">+1</button>
+    <button class="btn-plus-sosta" onclick="cambia('pdcTg',1)">
+      <span class="btn-title">Veicoli PdC</span>
+      <span class="btn-num" id="val-pdcTg">0</span>
+    </button>
   </div>
 
   <div class="watch-row highlight">
     <button class="btn-minus" onclick="cambia('pdcItaPos',-1)">-</button>
-    <div class="row-label"><h3>PdC Ita P</h3><div class="num" id="val-pdcItaPos">0</div></div>
-    <button class="btn-plus" onclick="cambia('pdcItaPos',1)">+1</button>
+    <button class="btn-plus-main" onclick="cambia('pdcItaPos',1)">
+      <span class="btn-title">PdC Ita Pos</span>
+      <span class="btn-num" id="val-pdcItaPos">0</span>
+    </button>
   </div>
 
   <div class="watch-row">
     <button class="btn-minus" onclick="cambia('pdcItaNeg',-1)">-</button>
-    <div class="row-label"><h3>PdC Ita N</h3><div class="num" id="val-pdcItaNeg">0</div></div>
-    <button class="btn-plus" onclick="cambia('pdcItaNeg',1)">+1</button>
+    <button class="btn-plus-main" onclick="cambia('pdcItaNeg',1)">
+      <span class="btn-title">PdC Ita Neg</span>
+      <span class="btn-num" id="val-pdcItaNeg">0</span>
+    </button>
   </div>
 
   <div class="watch-row highlight">
     <button class="btn-minus" onclick="cambia('pdcStraPos',-1)">-</button>
-    <div class="row-label"><h3>PdC Str P</h3><div class="num" id="val-pdcStraPos">0</div></div>
-    <button class="btn-plus" onclick="cambia('pdcStraPos',1)">+1</button>
+    <button class="btn-plus-main" onclick="cambia('pdcStraPos',1)">
+      <span class="btn-title">PdC Stra Pos</span>
+      <span class="btn-num" id="val-pdcStraPos">0</span>
+    </button>
   </div>
 
   <div class="watch-row">
     <button class="btn-minus" onclick="cambia('pdcStraNeg',-1)">-</button>
-    <div class="row-label"><h3>PdC Str N</h3><div class="num" id="val-pdcStraNeg">0</div></div>
-    <button class="btn-plus" onclick="cambia('pdcStraNeg',1)">+1</button>
+    <button class="btn-plus-main" onclick="cambia('pdcStraNeg',1)">
+      <span class="btn-title">PdC Stra Neg</span>
+      <span class="btn-num" id="val-pdcStraNeg">0</span>
+    </button>
   </div>
 
-  <!-- SEZIONE: APPIEDATI -->
   <div class="section-divider">Appiedati</div>
 
   <div class="watch-row highlight">
     <button class="btn-minus" onclick="cambia('apItaPos',-1)">-</button>
-    <div class="row-label"><h3>App Ita P</h3><div class="num" id="val-apItaPos">0</div></div>
-    <button class="btn-plus" onclick="cambia('apItaPos',1)">+1</button>
+    <button class="btn-plus-main" onclick="cambia('apItaPos',1)">
+      <span class="btn-title">App Ita Pos</span>
+      <span class="btn-num" id="val-apItaPos">0</span>
+    </button>
   </div>
 
   <div class="watch-row">
     <button class="btn-minus" onclick="cambia('apItaNeg',-1)">-</button>
-    <div class="row-label"><h3>App Ita N</h3><div class="num" id="val-apItaNeg">0</div></div>
-    <button class="btn-plus" onclick="cambia('apItaNeg',1)">+1</button>
+    <button class="btn-plus-main" onclick="cambia('apItaNeg',1)">
+      <span class="btn-title">App Ita Neg</span>
+      <span class="btn-num" id="val-apItaNeg">0</span>
+    </button>
   </div>
 
   <div class="watch-row highlight">
     <button class="btn-minus" onclick="cambia('apStraPos',-1)">-</button>
-    <div class="row-label"><h3>App Str P</h3><div class="num" id="val-apStraPos">0</div></div>
-    <button class="btn-plus" onclick="cambia('apStraPos',1)">+1</button>
+    <button class="btn-plus-main" onclick="cambia('apStraPos',1)">
+      <span class="btn-title">App Stra Pos</span>
+      <span class="btn-num" id="val-apStraPos">0</span>
+    </button>
   </div>
 
   <div class="watch-row">
     <button class="btn-minus" onclick="cambia('apStraNeg',-1)">-</button>
-    <div class="row-label"><h3>App Str N</h3><div class="num" id="val-apStraNeg">0</div></div>
-    <button class="btn-plus" onclick="cambia('apStraNeg',1)">+1</button>
+    <button class="btn-plus-main" onclick="cambia('apStraNeg',1)">
+      <span class="btn-title">App Stra Neg</span>
+      <span class="btn-num" id="val-apStraNeg">0</span>
+    </button>
   </div>
 
-  <!-- UTILITY E REPORT -->
-  <div class="section-divider">Output</div>
+  <div class="section-divider">Output Report</div>
   <div class="summary-box" id="riepilogo">Nessun dato</div>
 
   <div class="footer-actions">
@@ -291,18 +339,16 @@ let dati = {
 let cronologiaAzioni = [];
 
 function feedbackTattico() {
-  if (navigator.vibrate) navigator.vibrate(20);
+  if (navigator.vibrate) navigator.vibrate(25); // Vibrazione leggermente più decisa per il Watch
 }
 
 if (localStorage.getItem("watchTattico") === "true") {
   document.body.classList.add("red-mode");
-  document.getElementById("mode-icon").innerText = "⚫";
 }
 
 function toggleModalita() {
   feedbackTattico();
   const isRed = document.body.classList.toggle("red-mode");
-  document.getElementById("mode-icon").innerText = isRed ? "⚫" : "🔴";
   localStorage.setItem("watchTattico", isRed);
 }
 
