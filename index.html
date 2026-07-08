@@ -2,7 +2,7 @@
 <html lang="it">
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-<title>Ultra Hub Counter</title>
+<title>Ultra Hub Counter V2</title>
 <style>
   :root {
     --bg-main: #000000;
@@ -67,8 +67,8 @@
     display: flex;
     align-items: center;
     gap: 6px;
-    height: 22px;
-    margin-bottom: 4px;
+    height: 24px;
+    margin-bottom: 6px;
     flex-shrink: 0;
   }
   
@@ -78,7 +78,7 @@
     font-weight: bold;
     touch-action: manipulation;
     cursor: pointer;
-    border-radius: 10px;
+    border-radius: 12px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -96,13 +96,13 @@
   .btn-back {
     background: #262626;
     color: #fff;
-    width: 28px;
-    height: 20px;
-    font-size: 11px;
+    width: 32px;
+    height: 22px;
+    font-size: 12px;
     border-radius: 6px;
   }
 
-  /* GRID HUB INIZIALE (Tasti Giganti) */
+  /* GRID HUB INIZIALE (Fisso a schermo, blocca lo scroll) */
   .hub-grid {
     display: flex;
     flex-direction: column;
@@ -120,35 +120,38 @@
     flex-direction: column;
     gap: 2px;
   }
-  .btn-hub span { font-size: 14px; font-weight: 900; }
+  .btn-hub span { font-size: 15px; font-weight: 900; }
 
   .tr-bg { background: var(--accent-tr); }
   .pdc-bg { background: var(--accent-pdc); }
   .ap-bg { background: var(--accent-ap); }
   .so-bg { background: var(--accent-so); }
 
-  /* SOTTO-SCHERMATE OPERATIVE */
+  /* SOTTO-SCHERMATE OPERATIVE (Sbloccate per lo scorrimento) */
   .sub-container {
     display: flex;
     flex-direction: column;
-    gap: 5px;
+    gap: 8px; /* Più spazio verticale tra i tastoni */
     flex-grow: 1;
-    overflow-y: auto;
+    overflow-y: scroll; /* Forza lo scroll verticale su watchOS */
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 30px; /* Spazio extra in fondo per scorrere comodi */
   }
 
   .counter-row {
     display: flex;
     gap: 4px;
-    height: 46px;
-    flex-shrink: 0;
+    height: 68px; /* TASTI INTERNI ANCORA PIÙ GRANDI */
+    flex-shrink: 0; /* Impedisce ai tasti di rimpicciolirsi */
+    width: 100%;
   }
 
-  .btn-minus { background: #262626; color: #ef4444; width: 28%; font-size: 18px; }
-  .btn-plus { width: 72%; color: white; flex-direction: column; padding: 2px; }
+  .btn-minus { background: #262626; color: #ef4444; width: 28%; font-size: 22px; }
+  .btn-plus { width: 72%; color: white; flex-direction: column; padding: 4px; }
   body.red-mode .btn-minus { background: #3b0707; color: #fca5a5; }
 
-  .c-label { font-size: 9px; text-transform: uppercase; opacity: 0.9; }
-  .c-num { font-size: 20px; font-weight: 900; line-height: 1; }
+  .c-label { font-size: 10px; text-transform: uppercase; opacity: 0.9; letter-spacing: 0.3px; }
+  .c-num { font-size: 26px; font-weight: 900; line-height: 1; margin-top: 2px; }
 
   /* COMPARTI OUTPUT */
   .summary-box {
@@ -161,8 +164,8 @@
     text-align: left;
     white-space: pre-line;
     color: #38bdf8;
-    flex-grow: 1;
-    overflow-y: auto;
+    flex-shrink: 0;
+    margin-top: 4px;
   }
   body.red-mode .summary-box { background: #110202; border-color: #2d0606; color: #f87171; }
 
@@ -182,7 +185,7 @@
 </head>
 <body>
 
-<!-- 1. SCHERMATA INIZIALE (HUB) -->
+<!-- 1. SCHERMATA INIZIALE (HUB) - Rimane fissa e centrata -->
 <div class="watch-screen active" id="screen-hub">
   <div class="header">
     <h2>Menu Principale</h2>
@@ -201,7 +204,7 @@
   </div>
 </div>
 
-<!-- 2. SCHERMATA: OCCUPANTI TRANSITO -->
+<!-- 2. SCHERMATA: OCCUPANTI TRANSITO (Scrollabile) -->
 <div class="watch-screen" id="screen-transito">
   <div class="nav-header">
     <button class="btn-back" onclick="vaiA('screen-hub')">◀</button>
@@ -241,7 +244,7 @@
   </div>
 </div>
 
-<!-- 3. SCHERMATA: POSTO DI CONTROLLO -->
+<!-- 3. SCHERMATA: POSTO DI CONTROLLO (Scrollabile) -->
 <div class="watch-screen" id="screen-pdc">
   <div class="nav-header">
     <button class="btn-back" onclick="vaiA('screen-hub')">◀</button>
@@ -281,7 +284,7 @@
   </div>
 </div>
 
-<!-- 4. SCHERMATA: APPIEDATI -->
+<!-- 4. SCHERMATA: APPIEDATI (Scrollabile) -->
 <div class="watch-screen" id="screen-appiedati">
   <div class="nav-header">
     <button class="btn-back" onclick="vaiA('screen-hub')">◀</button>
@@ -315,18 +318,18 @@
   </div>
 </div>
 
-<!-- 5. SCHERMATA: TARGHE SOSTA -->
+<!-- 5. SCHERMATA: TARGHE SOSTA (Con Output integrato) -->
 <div class="watch-screen" id="screen-sosta">
   <div class="nav-header">
     <button class="btn-back" onclick="vaiA('screen-hub')">◀</button>
-    <span class="c-label">Sosta</span>
+    <span class="c-label">Sosta & Report</span>
   </div>
   <div class="sub-container">
-    <div class="counter-row" style="height: 80px;">
+    <div class="counter-row" style="height: 76px;">
       <button class="btn-minus" onclick="cambia('tgSosta',-1)">-</button>
       <button class="btn-plus so-bg" onclick="cambia('tgSosta',1)">
-        <span class="c-label" style="font-size:11px;">Targhe in Sosta</span>
-        <span class="c-num" style="font-size:32px;" id="val-tgSosta">0</span>
+        <span class="c-label">Targhe in Sosta</span>
+        <span class="c-num" style="font-size:30px;" id="val-tgSosta">0</span>
       </button>
     </div>
     <div class="summary-box" id="riepilogo">Nessun dato</div>
@@ -334,7 +337,7 @@
 </div>
 
 <script>
-let datiSalvati = JSON.parse(localStorage.getItem("hubWatchV1")) || {};
+let datiSalvati = JSON.parse(localStorage.getItem("hubWatchV2")) || {};
 let dati = {
   tgSosta: Number(datiSalvati.tgSosta) || 0, tg: Number(datiSalvati.tg) || 0,
   itaNeg: Number(datiSalvati.itaNeg) || 0, itaPos: Number(datiSalvati.itaPos) || 0,
@@ -350,26 +353,29 @@ let cronologiaAzioni = [];
 
 function feedback() { if (navigator.vibrate) navigator.vibrate(22); }
 
-if (localStorage.getItem("hubWatchTattico") === "true") document.body.classList.add("red-mode");
+if (localStorage.getItem("hubWatchTatticoV2") === "true") document.body.classList.add("red-mode");
 
 function toggleModalita() {
   feedback();
   const isRed = document.body.classList.toggle("red-mode");
-  localStorage.setItem("hubWatchTattico", isRed);
+  localStorage.setItem("hubWatchTatticoV2", isRed);
 }
 
 function vaiA(screenId) {
   feedback();
   document.querySelectorAll('.watch-screen').forEach(s => s.classList.remove('active'));
   document.getElementById(screenId).classList.add('active');
+  // Riporta lo scroll in cima quando si cambia pagina
+  const container = document.querySelector(`#${screenId} .sub-container`);
+  if (container) container.scrollTop = 0;
 }
 
 function cambia(k, v) {
   feedback();
   cronologiaAzioni.push({ chiave: k, valorePrecedente: dati[k] });
-  if (cronologiaAzioni.length > 20) cronologiaAzioni.shift();
+  if (cronologiaAzioni.length > 25) cronologiaAzioni.shift();
   dati[k] = Math.max(0, dati[k] + v);
-  localStorage.setItem("hubWatchV1", JSON.stringify(dati));
+  localStorage.setItem("hubWatchV2", JSON.stringify(dati));
   aggiornaInterfaccia();
 }
 
@@ -378,7 +384,7 @@ function annulla() {
   feedback();
   let ultima = cronologiaAzioni.pop();
   dati[ultima.chiave] = ultima.valorePrecedente;
-  localStorage.setItem("hubWatchV1", JSON.stringify(dati));
+  localStorage.setItem("hubWatchV2", JSON.stringify(dati));
   aggiornaInterfaccia();
 }
 
@@ -415,13 +421,11 @@ function generaReport(usaGrassetto = false) {
 }
 
 function aggiornaInterfaccia() {
-  // Aggiorna valori schermate interne
   for (let k in dati) {
     let el = document.getElementById(`val-${k}`);
     if(el) el.innerText = dati[k];
   }
   
-  // Aggiorna macro-numeri sull'Hub principale
   document.getElementById("hub-tg").innerText = dati.tg;
   document.getElementById("hub-pdc").innerText = dati.pdcTg;
   document.getElementById("hub-ap").innerText = dati.apItaPos + dati.apItaNeg + dati.apStraPos + dati.apStraNeg;
@@ -447,7 +451,7 @@ function azzera() {
   if (confirm("Azzera tutto?")) {
     for (let k in dati) dati[k] = 0;
     cronologiaAzioni = [];
-    localStorage.setItem("hubWatchV1", JSON.stringify(dati));
+    localStorage.setItem("hubWatchV2", JSON.stringify(dati));
     aggiornaInterfaccia();
   }
 }
