@@ -2,27 +2,29 @@
 <html lang="it">
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-<title>Contatore Ultra MAX</title>
+<title>Ultra Hub Counter</title>
 <style>
   :root {
     --bg-main: #000000;
     --bg-card: #141414;
     --border-card: #262626;
     --text-title: #94a3b8;
-    --pos-highlight: #450a0a;
-    --pos-border: #991b1b;
     --text-main: #f8fafc;
-    --accent: #38bdf8;
+    --accent-tr: #059669;  /* Verde */
+    --accent-pdc: #7c3aed; /* Viola */
+    --accent-ap: #1d4ed8;  /* Blu */
+    --accent-so: #2563eb;  /* Blu Sosta */
   }
 
   body.red-mode {
     --bg-card: #1c0505;
     --border-card: #450a0a;
     --text-title: #fca5a5;
-    --pos-highlight: #6b0707;
-    --pos-border: #b91c1c;
     --text-main: #fee2e2;
-    --accent: #ef4444;
+    --accent-tr: #064e3b;
+    --accent-pdc: #581c87;
+    --accent-ap: #1e3a8a;
+    --accent-so: #1e3a8a;
   }
 
   html, body {
@@ -34,141 +36,143 @@
     -webkit-user-select: none;
     user-select: none;
     box-sizing: border-box;
+    height: 100vh;
+    overflow: hidden;
   }
 
-  .watch-container {
-    padding: 4px 2px calc(30px + env(safe-area-inset-bottom)) 2px;
-    display: flex;
+  .watch-screen {
+    display: none;
     flex-direction: column;
-    gap: 10px; /* Più spazio tra i blocchi */
+    height: 100vh;
+    padding: 4px 4px calc(12px + env(safe-area-inset-bottom)) 4px;
+    box-sizing: border-box;
   }
 
-  /* HEADER */
+  .watch-screen.active {
+    display: flex;
+  }
+
+  /* HEADER COMPATTO */
   .header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 0 6px;
-    height: 24px;
+    height: 20px;
+    margin-bottom: 4px;
+    flex-shrink: 0;
   }
-  .header h2 { font-size: 12px; margin: 0; color: var(--text-title); text-transform: uppercase; letter-spacing: 0.5px; }
-  .btn-mode {
-    background: var(--bg-card);
-    border: 1px solid var(--border-card);
-    border-radius: 50%;
-    width: 22px; height: 22px;
-    font-size: 10px;
-    display: flex; align-items: center; justify-content: center;
-  }
-
-  .section-divider {
-    font-size: 11px;
-    font-weight: 900;
-    color: var(--accent);
-    text-transform: uppercase;
-    text-align: left;
-    padding-left: 6px;
-    margin-top: 6px;
-    border-left: 3px solid var(--accent);
-  }
-
-  /* BLOCCO COMANDO MAXI */
-  .watch-row {
+  .header h2 { font-size: 11px; margin: 0; color: var(--text-title); text-transform: uppercase; }
+  
+  .nav-header {
     display: flex;
-    gap: 3px;
-    height: 56px; /* Altezza massimizzata per il touch */
-    width: 100%;
+    align-items: center;
+    gap: 6px;
+    height: 22px;
+    margin-bottom: 4px;
+    flex-shrink: 0;
   }
-
+  
+  /* PULSANTI */
   button {
     border: 0;
-    height: 100%;
     font-weight: bold;
     touch-action: manipulation;
     cursor: pointer;
-    border-radius: 12px;
+    border-radius: 10px;
     display: flex;
-    flex-direction: column;
     align-items: center;
     justify-content: center;
   }
   button:active { opacity: 0.6; }
 
-  /* TASTO MENO (30% Larghezza) */
-  .btn-minus { 
-    background: #262626; 
-    color: #ef4444; 
-    width: 28%; 
-    font-size: 20px; 
+  .btn-mode {
+    background: var(--bg-card);
+    border: 1px solid var(--border-card);
+    border-radius: 50%;
+    width: 20px; height: 20px;
+    font-size: 9px;
+  }
+
+  .btn-back {
+    background: #262626;
+    color: #fff;
+    width: 28px;
+    height: 20px;
+    font-size: 11px;
+    border-radius: 6px;
+  }
+
+  /* GRID HUB INIZIALE (Tasti Giganti) */
+  .hub-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    flex-grow: 1;
   }
   
-  /* TASTO PIÙ (72% Larghezza) con info interna */
-  .btn-plus-main { 
-    width: 72%; 
-    background: #059669; 
-    color: white; 
-    padding: 2px 4px;
-  }
-  .btn-plus-sosta { 
-    width: 72%; 
-    background: #2563eb; 
-    color: white; 
-    padding: 2px 4px;
-  }
-
-  body.red-mode .btn-minus { background: #3b0707; color: #fca5a5; }
-  body.red-mode .btn-plus-main { background: #064e3b; color: #a7f3d0; }
-  body.red-mode .btn-plus-sosta { background: #1e3a8a; color: #bfdbfe; }
-
-  /* Elementi di testo dentro il tastone */
-  .btn-title {
-    font-size: 9px;
+  .btn-hub {
+    flex: 1;
+    width: 100%;
+    font-size: 11px;
     text-transform: uppercase;
-    opacity: 0.85;
-    font-weight: 600;
-    letter-spacing: 0.3px;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
   }
-  .btn-num {
-    font-size: 24px;
-    font-weight: 900;
-    line-height: 1;
-    margin-top: 1px;
+  .btn-hub span { font-size: 14px; font-weight: 900; }
+
+  .tr-bg { background: var(--accent-tr); }
+  .pdc-bg { background: var(--accent-pdc); }
+  .ap-bg { background: var(--accent-ap); }
+  .so-bg { background: var(--accent-so); }
+
+  /* SOTTO-SCHERMATE OPERATIVE */
+  .sub-container {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    flex-grow: 1;
+    overflow-y: auto;
   }
 
-  /* EVIDENZIAZIONE POSTO HIGHLIGHT */
-  .highlight .btn-plus-main {
-    background: #b91c1c;
-  }
-  body.red-mode .highlight .btn-plus-main {
-    background: #991b1b;
-    border: 1px solid #ef4444;
+  .counter-row {
+    display: flex;
+    gap: 4px;
+    height: 46px;
+    flex-shrink: 0;
   }
 
-  /* OUTPUT IN FONDO */
+  .btn-minus { background: #262626; color: #ef4444; width: 28%; font-size: 18px; }
+  .btn-plus { width: 72%; color: white; flex-direction: column; padding: 2px; }
+  body.red-mode .btn-minus { background: #3b0707; color: #fca5a5; }
+
+  .c-label { font-size: 9px; text-transform: uppercase; opacity: 0.9; }
+  .c-num { font-size: 20px; font-weight: 900; line-height: 1; }
+
+  /* COMPARTI OUTPUT */
   .summary-box {
     background: #070707;
-    border: 1px solid #1a1a1a;
-    border-radius: 10px;
-    padding: 8px;
-    font-size: 11px;
+    border: 1px solid #161616;
+    border-radius: 8px;
+    padding: 6px;
+    font-size: 10px;
     font-family: monospace;
     text-align: left;
     white-space: pre-line;
     color: #38bdf8;
+    flex-grow: 1;
+    overflow-y: auto;
   }
   body.red-mode .summary-box { background: #110202; border-color: #2d0606; color: #f87171; }
 
-  .footer-actions {
-    display: flex;
-    gap: 4px;
-    height: 44px;
-  }
-  .btn-action { font-size: 14px; border-radius: 10px; color: white; flex: 1; }
+  .footer-actions { display: flex; gap: 4px; height: 38px; flex-shrink: 0; margin-top: 4px; }
+  .btn-action { font-size: 12px; color: white; flex: 1; }
   .wsp { background: #16a34a; }
   .cpy { background: #0284c7; }
   .cpy.success { background: #15803d !important; }
-  .und { background: #4b5563; flex: 0.6; font-size: 16px; }
-  .rst { background: #b45309; flex: 0.6; font-size: 16px; }
+  .und { background: #4b5563; flex: 0.5; }
+  .rst { background: #b45309; flex: 0.5; }
 
   body.red-mode .wsp { background: #064e3b; color: #a7f3d0; }
   body.red-mode .cpy { background: #0369a1; color: #bae6fd; }
@@ -178,153 +182,159 @@
 </head>
 <body>
 
-<div class="watch-container">
-  
+<!-- 1. SCHERMATA INIZIALE (HUB) -->
+<div class="watch-screen active" id="screen-hub">
   <div class="header">
-    <h2>Memb. Ultra MAX</h2>
-    <button class="btn-mode" id="mode-icon" onclick="toggleModalita()">🔴</button>
+    <h2>Menu Principale</h2>
+    <button class="btn-mode" onclick="toggleModalita()">🔴</button>
   </div>
-
-  <div class="section-divider">Transito / Sosta</div>
-  
-  <div class="watch-row">
-    <button class="btn-minus" onclick="cambia('tgSosta',-1)">-</button>
-    <button class="btn-plus-sosta" onclick="cambia('tgSosta',1)">
-      <span class="btn-title">Targhe Sosta</span>
-      <span class="btn-num" id="val-tgSosta">0</span>
-    </button>
+  <div class="hub-grid">
+    <button class="btn-hub tr-bg" onclick="vaiA('screen-transito')">Occ. Transito <span id="hub-tg">0</span></button>
+    <button class="btn-hub pdc-bg" onclick="vaiA('screen-pdc')">Posto Controllo <span id="hub-pdc">0</span></button>
+    <button class="btn-hub ap-bg" onclick="vaiA('screen-appiedati')">Appiedati <span id="hub-ap">0</span></button>
+    <button class="btn-hub so-bg" onclick="vaiA('screen-sosta')">Targhe Sosta <span id="hub-so">0</span></button>
   </div>
-
-  <div class="watch-row">
-    <button class="btn-minus" onclick="cambia('tg',-1)">-</button>
-    <button class="btn-plus-main" onclick="cambia('tg',1)">
-      <span class="btn-title">Occupanti Transito</span>
-      <span class="btn-num" id="val-tg">0</span>
-    </button>
-  </div>
-
-  <div class="watch-row highlight">
-    <button class="btn-minus" onclick="cambia('itaPos',-1)">-</button>
-    <button class="btn-plus-main" onclick="cambia('itaPos',1)">
-      <span class="btn-title">Ita Pos</span>
-      <span class="btn-num" id="val-itaPos">0</span>
-    </button>
-  </div>
-
-  <div class="watch-row">
-    <button class="btn-minus" onclick="cambia('itaNeg',-1)">-</button>
-    <button class="btn-plus-main" onclick="cambia('itaNeg',1)">
-      <span class="btn-title">Ita Neg</span>
-      <span class="btn-num" id="val-itaNeg">0</span>
-    </button>
-  </div>
-
-  <div class="watch-row highlight">
-    <button class="btn-minus" onclick="cambia('straPos',-1)">-</button>
-    <button class="btn-plus-main" onclick="cambia('straPos',1)">
-      <span class="btn-title">Stra Pos</span>
-      <span class="btn-num" id="val-straPos">0</span>
-    </button>
-  </div>
-
-  <div class="watch-row">
-    <button class="btn-minus" onclick="cambia('straNeg',-1)">-</button>
-    <button class="btn-plus-main" onclick="cambia('straNeg',1)">
-      <span class="btn-title">Stra Neg</span>
-      <span class="btn-num" id="val-straNeg">0</span>
-    </button>
-  </div>
-
-  <div class="section-divider">Posto di Controllo</div>
-
-  <div class="watch-row">
-    <button class="btn-minus" onclick="cambia('pdcTg',-1)">-</button>
-    <button class="btn-plus-sosta" onclick="cambia('pdcTg',1)">
-      <span class="btn-title">Veicoli PdC</span>
-      <span class="btn-num" id="val-pdcTg">0</span>
-    </button>
-  </div>
-
-  <div class="watch-row highlight">
-    <button class="btn-minus" onclick="cambia('pdcItaPos',-1)">-</button>
-    <button class="btn-plus-main" onclick="cambia('pdcItaPos',1)">
-      <span class="btn-title">PdC Ita Pos</span>
-      <span class="btn-num" id="val-pdcItaPos">0</span>
-    </button>
-  </div>
-
-  <div class="watch-row">
-    <button class="btn-minus" onclick="cambia('pdcItaNeg',-1)">-</button>
-    <button class="btn-plus-main" onclick="cambia('pdcItaNeg',1)">
-      <span class="btn-title">PdC Ita Neg</span>
-      <span class="btn-num" id="val-pdcItaNeg">0</span>
-    </button>
-  </div>
-
-  <div class="watch-row highlight">
-    <button class="btn-minus" onclick="cambia('pdcStraPos',-1)">-</button>
-    <button class="btn-plus-main" onclick="cambia('pdcStraPos',1)">
-      <span class="btn-title">PdC Stra Pos</span>
-      <span class="btn-num" id="val-pdcStraPos">0</span>
-    </button>
-  </div>
-
-  <div class="watch-row">
-    <button class="btn-minus" onclick="cambia('pdcStraNeg',-1)">-</button>
-    <button class="btn-plus-main" onclick="cambia('pdcStraNeg',1)">
-      <span class="btn-title">PdC Stra Neg</span>
-      <span class="btn-num" id="val-pdcStraNeg">0</span>
-    </button>
-  </div>
-
-  <div class="section-divider">Appiedati</div>
-
-  <div class="watch-row highlight">
-    <button class="btn-minus" onclick="cambia('apItaPos',-1)">-</button>
-    <button class="btn-plus-main" onclick="cambia('apItaPos',1)">
-      <span class="btn-title">App Ita Pos</span>
-      <span class="btn-num" id="val-apItaPos">0</span>
-    </button>
-  </div>
-
-  <div class="watch-row">
-    <button class="btn-minus" onclick="cambia('apItaNeg',-1)">-</button>
-    <button class="btn-plus-main" onclick="cambia('apItaNeg',1)">
-      <span class="btn-title">App Ita Neg</span>
-      <span class="btn-num" id="val-apItaNeg">0</span>
-    </button>
-  </div>
-
-  <div class="watch-row highlight">
-    <button class="btn-minus" onclick="cambia('apStraPos',-1)">-</button>
-    <button class="btn-plus-main" onclick="cambia('apStraPos',1)">
-      <span class="btn-title">App Stra Pos</span>
-      <span class="btn-num" id="val-apStraPos">0</span>
-    </button>
-  </div>
-
-  <div class="watch-row">
-    <button class="btn-minus" onclick="cambia('apStraNeg',-1)">-</button>
-    <button class="btn-plus-main" onclick="cambia('apStraNeg',1)">
-      <span class="btn-title">App Stra Neg</span>
-      <span class="btn-num" id="val-apStraNeg">0</span>
-    </button>
-  </div>
-
-  <div class="section-divider">Output Report</div>
-  <div class="summary-box" id="riepilogo">Nessun dato</div>
-
   <div class="footer-actions">
-    <button class="btn-action und" id="btn-undo" onclick="annulla()" style="opacity:0.3;">↩︎</button>
-    <button class="btn-action wsp" onclick="inviaWhatsApp()">💬</button>
-    <button class="btn-action cpy" id="btn-copia" onclick="copiaTesto()">📋</button>
+    <button class="btn-action und" id="hub-undo" onclick="annulla()" style="opacity:0.3;">↩︎</button>
+    <button class="btn-action cpy" id="hub-copia" onclick="copiaTesto()">📋 Report</button>
     <button class="btn-action rst" onclick="azzera()">🗑️</button>
   </div>
+</div>
 
+<!-- 2. SCHERMATA: OCCUPANTI TRANSITO -->
+<div class="watch-screen" id="screen-transito">
+  <div class="nav-header">
+    <button class="btn-back" onclick="vaiA('screen-hub')">◀</button>
+    <span class="c-label">Transito</span>
+  </div>
+  <div class="sub-container">
+    <div class="counter-row">
+      <button class="btn-minus" onclick="cambia('tg',-1)">-</button>
+      <button class="btn-plus tr-bg" onclick="cambia('tg',1)">
+        <span class="c-label">Totale Occupanti</span><span class="c-num" id="val-tg">0</span>
+      </button>
+    </div>
+    <div class="counter-row">
+      <button class="btn-minus" onclick="cambia('itaPos',-1)">-</button>
+      <button class="btn-plus tr-bg" onclick="cambia('itaPos',1)">
+        <span class="c-label">Ita Pos</span><span class="c-num" id="val-itaPos">0</span>
+      </button>
+    </div>
+    <div class="counter-row">
+      <button class="btn-minus" onclick="cambia('itaNeg',-1)">-</button>
+      <button class="btn-plus tr-bg" onclick="cambia('itaNeg',1)">
+        <span class="c-label">Ita Neg</span><span class="c-num" id="val-itaNeg">0</span>
+      </button>
+    </div>
+    <div class="counter-row">
+      <button class="btn-minus" onclick="cambia('straPos',-1)">-</button>
+      <button class="btn-plus tr-bg" onclick="cambia('straPos',1)">
+        <span class="c-label">Stra Pos</span><span class="c-num" id="val-straPos">0</span>
+      </button>
+    </div>
+    <div class="counter-row">
+      <button class="btn-minus" onclick="cambia('straNeg',-1)">-</button>
+      <button class="btn-plus tr-bg" onclick="cambia('straNeg',1)">
+        <span class="c-label">Stra Neg</span><span class="c-num" id="val-straNeg">0</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- 3. SCHERMATA: POSTO DI CONTROLLO -->
+<div class="watch-screen" id="screen-pdc">
+  <div class="nav-header">
+    <button class="btn-back" onclick="vaiA('screen-hub')">◀</button>
+    <span class="c-label">Posto di Controllo</span>
+  </div>
+  <div class="sub-container">
+    <div class="counter-row">
+      <button class="btn-minus" onclick="cambia('pdcTg',-1)">-</button>
+      <button class="btn-plus pdc-bg" onclick="cambia('pdcTg',1)">
+        <span class="c-label">Veicoli Controllati</span><span class="c-num" id="val-pdcTg">0</span>
+      </button>
+    </div>
+    <div class="counter-row">
+      <button class="btn-minus" onclick="cambia('pdcItaPos',-1)">-</button>
+      <button class="btn-plus pdc-bg" onclick="cambia('pdcItaPos',1)">
+        <span class="c-label">PdC Ita Pos</span><span class="c-num" id="val-pdcItaPos">0</span>
+      </button>
+    </div>
+    <div class="counter-row">
+      <button class="btn-minus" onclick="cambia('pdcItaNeg',-1)">-</button>
+      <button class="btn-plus pdc-bg" onclick="cambia('pdcItaNeg',1)">
+        <span class="c-label">PdC Ita Neg</span><span class="c-num" id="val-pdcItaNeg">0</span>
+      </button>
+    </div>
+    <div class="counter-row">
+      <button class="btn-minus" onclick="cambia('pdcStraPos',-1)">-</button>
+      <button class="btn-plus pdc-bg" onclick="cambia('pdcStraPos',1)">
+        <span class="c-label">PdC Stra Pos</span><span class="c-num" id="val-pdcStraPos">0</span>
+      </button>
+    </div>
+    <div class="counter-row">
+      <button class="btn-minus" onclick="cambia('pdcStraNeg',-1)">-</button>
+      <button class="btn-plus pdc-bg" onclick="cambia('pdcStraNeg',1)">
+        <span class="c-label">PdC Stra Neg</span><span class="c-num" id="val-pdcStraNeg">0</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- 4. SCHERMATA: APPIEDATI -->
+<div class="watch-screen" id="screen-appiedati">
+  <div class="nav-header">
+    <button class="btn-back" onclick="vaiA('screen-hub')">◀</button>
+    <span class="c-label">Appiedati</span>
+  </div>
+  <div class="sub-container">
+    <div class="counter-row">
+      <button class="btn-minus" onclick="cambia('apItaPos',-1)">-</button>
+      <button class="btn-plus ap-bg" onclick="cambia('apItaPos',1)">
+        <span class="c-label">App Ita Pos</span><span class="c-num" id="val-apItaPos">0</span>
+      </button>
+    </div>
+    <div class="counter-row">
+      <button class="btn-minus" onclick="cambia('apItaNeg',-1)">-</button>
+      <button class="btn-plus ap-bg" onclick="cambia('apItaNeg',1)">
+        <span class="c-label">App Ita Neg</span><span class="c-num" id="val-apItaNeg">0</span>
+      </button>
+    </div>
+    <div class="counter-row">
+      <button class="btn-minus" onclick="cambia('apStraPos',-1)">-</button>
+      <button class="btn-plus ap-bg" onclick="cambia('apStraPos',1)">
+        <span class="c-label">App Stra Pos</span><span class="c-num" id="val-apStraPos">0</span>
+      </button>
+    </div>
+    <div class="counter-row">
+      <button class="btn-minus" onclick="cambia('apStraNeg',-1)">-</button>
+      <button class="btn-plus ap-bg" onclick="cambia('apStraNeg',1)">
+        <span class="c-label">App Stra Neg</span><span class="c-num" id="val-apStraNeg">0</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- 5. SCHERMATA: TARGHE SOSTA -->
+<div class="watch-screen" id="screen-sosta">
+  <div class="nav-header">
+    <button class="btn-back" onclick="vaiA('screen-hub')">◀</button>
+    <span class="c-label">Sosta</span>
+  </div>
+  <div class="sub-container">
+    <div class="counter-row" style="height: 80px;">
+      <button class="btn-minus" onclick="cambia('tgSosta',-1)">-</button>
+      <button class="btn-plus so-bg" onclick="cambia('tgSosta',1)">
+        <span class="c-label" style="font-size:11px;">Targhe in Sosta</span>
+        <span class="c-num" style="font-size:32px;" id="val-tgSosta">0</span>
+      </button>
+    </div>
+    <div class="summary-box" id="riepilogo">Nessun dato</div>
+  </div>
 </div>
 
 <script>
-let datiSalvati = JSON.parse(localStorage.getItem("watchContatoreV1")) || {};
+let datiSalvati = JSON.parse(localStorage.getItem("hubWatchV1")) || {};
 let dati = {
   tgSosta: Number(datiSalvati.tgSosta) || 0, tg: Number(datiSalvati.tg) || 0,
   itaNeg: Number(datiSalvati.itaNeg) || 0, itaPos: Number(datiSalvati.itaPos) || 0,
@@ -338,36 +348,38 @@ let dati = {
 
 let cronologiaAzioni = [];
 
-function feedbackTattico() {
-  if (navigator.vibrate) navigator.vibrate(25); // Vibrazione leggermente più decisa per il Watch
-}
+function feedback() { if (navigator.vibrate) navigator.vibrate(22); }
 
-if (localStorage.getItem("watchTattico") === "true") {
-  document.body.classList.add("red-mode");
-}
+if (localStorage.getItem("hubWatchTattico") === "true") document.body.classList.add("red-mode");
 
 function toggleModalita() {
-  feedbackTattico();
+  feedback();
   const isRed = document.body.classList.toggle("red-mode");
-  localStorage.setItem("watchTattico", isRed);
+  localStorage.setItem("hubWatchTattico", isRed);
+}
+
+function vaiA(screenId) {
+  feedback();
+  document.querySelectorAll('.watch-screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(screenId).classList.add('active');
 }
 
 function cambia(k, v) {
-  feedbackTattico();
+  feedback();
   cronologiaAzioni.push({ chiave: k, valorePrecedente: dati[k] });
-  if (cronologiaAzioni.length > 15) cronologiaAzioni.shift();
+  if (cronologiaAzioni.length > 20) cronologiaAzioni.shift();
   dati[k] = Math.max(0, dati[k] + v);
-  localStorage.setItem("watchContatoreV1", JSON.stringify(dati));
-  aggiornaSchermata();
+  localStorage.setItem("hubWatchV1", JSON.stringify(dati));
+  aggiornaInterfaccia();
 }
 
 function annulla() {
   if (cronologiaAzioni.length === 0) return;
-  feedbackTattico();
+  feedback();
   let ultima = cronologiaAzioni.pop();
   dati[ultima.chiave] = ultima.valorePrecedente;
-  localStorage.setItem("watchContatoreV1", JSON.stringify(dati));
-  aggiornaSchermata();
+  localStorage.setItem("hubWatchV1", JSON.stringify(dati));
+  aggiornaInterfaccia();
 }
 
 function generaReport(usaGrassetto = false) {
@@ -379,7 +391,6 @@ function generaReport(usaGrassetto = false) {
   if (dati.pdcItaPos > 0) detPdc.push(`${b}${dati.pdcItaPos}${b} ita pos`);
   if (dati.pdcStraPos > 0) detPdc.push(`${b}${dati.pdcStraPos}${b} stra pos`);
   if (dati.pdcStraNeg > 0) detPdc.push(`${b}${dati.pdcStraNeg}${b} stra neg`);
-  
   if (detPdc.length > 0) macro.push(`${b}POSTO DI CONTROLLO:${b} ${b}${dati.pdcTg}${b} tg con ${detPdc.join(", ")}`);
   else if (dati.pdcTg > 0) macro.push(`${b}POSTO DI CONTROLLO:${b} ${b}${dati.pdcTg}${b} tg`);
 
@@ -397,46 +408,51 @@ function generaReport(usaGrassetto = false) {
   if (dati.itaPos > 0) detTr.push(`${b}${dati.itaPos}${b} ita pos`);
   if (dati.straPos > 0) detTr.push(`${b}${dati.straPos}${b} stra pos`);
   if (dati.straNeg > 0) detTr.push(`${b}${dati.straNeg}${b} stra neg`);
-  
   if (detTr.length > 0) macro.push(`${b}${dati.tg}${b} tg con ${detTr.join(", ")}`);
   else if (dati.tg > 0) macro.push(`${b}${dati.tg}${b} tg`);
 
   return macro.length > 0 ? macro.join("\n\n") : "Nessun dato";
 }
 
-function aggiornaSchermata() {
+function aggiornaInterfaccia() {
+  // Aggiorna valori schermate interne
   for (let k in dati) {
     let el = document.getElementById(`val-${k}`);
     if(el) el.innerText = dati[k];
   }
-  document.getElementById("riepilogo").innerText = generaReport(false);
-  document.getElementById("btn-undo").style.opacity = cronologiaAzioni.length > 0 ? "1" : "0.3";
-}
+  
+  // Aggiorna macro-numeri sull'Hub principale
+  document.getElementById("hub-tg").innerText = dati.tg;
+  document.getElementById("hub-pdc").innerText = dati.pdcTg;
+  document.getElementById("hub-ap").innerText = dati.apItaPos + dati.apItaNeg + dati.apStraPos + dati.apStraNeg;
+  document.getElementById("hub-so").innerText = dati.tgSosta;
 
-function inviaWhatsApp() {
-  feedbackTattico();
-  window.location.href = "whatsapp://send?text=" + encodeURIComponent(generaReport(true));
+  document.getElementById("riepilogo").innerText = generaReport(false);
+  document.getElementById("hub-undo").style.opacity = cronologiaAzioni.length > 0 ? "1" : "0.3";
 }
 
 function copiaTesto() {
-  feedbackTattico();
+  feedback();
   navigator.clipboard.writeText(generaReport(true)).then(() => {
-    const btn = document.getElementById("btn-copia");
+    const btn = document.getElementById("hub-copia");
     btn.classList.add("success");
-    setTimeout(() => { btn.classList.remove("success"); }, 1000);
+    let prev = btn.innerText;
+    btn.innerText = "✅ Copiato";
+    setTimeout(() => { btn.classList.remove("success"); btn.innerText = prev; }, 1000);
   });
 }
 
 function azzera() {
-  feedbackTattico();
+  feedback();
   if (confirm("Azzera tutto?")) {
     for (let k in dati) dati[k] = 0;
     cronologiaAzioni = [];
-    localStorage.setItem("watchContatoreV1", JSON.stringify(dati));
-    aggiornaSchermata();
+    localStorage.setItem("hubWatchV1", JSON.stringify(dati));
+    aggiornaInterfaccia();
   }
 }
-aggiornaSchermata();
+
+aggiornaInterfaccia();
 </script>
 </body>
 </html>
