@@ -2,619 +2,299 @@
 <html lang="it">
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-<title>Contatore Posto di Controllo - V2</title>
+<title>Contatore Watch OS</title>
 <style>
-  /* BASE DI PARTENZA NATIVA: TOTAL BLACK */
   :root {
     --bg-main: #000000;
-    --bg-card: #111111;
-    --border-card: #2a2a2a;
-    --text-title: #666666;
-    --pos-highlight: #451a03;
-    --pos-border: #b45309;
-    --pos-text: #fbbf24;
+    --bg-card: #121212;
+    --border-card: #222222;
+    --text-title: #888888;
+    --pos-highlight: #450a0a;
+    --pos-border: #7f1d1d;
     --text-main: #f8fafc;
-    --ok-flash: #4ade80;
+    --accent: #0ea5e9;
   }
 
-  /* MODALITÀ ROSSO TATTICO */
   body.red-mode {
-    --bg-main: #000000;
     --bg-card: #1a0505;
-    --border-card: #5b1010;
+    --border-card: #3b0707;
     --text-title: #991b1b;
-    /* la card "positivo" resta ambra anche in rosso tattico, per non confondersi con lo sfondo */
-    --pos-highlight: #3f1a02;
-    --pos-border: #c2760a;
-    --pos-text: #fbbf24;
+    --pos-highlight: #5c0707;
+    --pos-border: #991b1b;
     --text-main: #fca5a5;
+    --accent: #ef4444;
   }
 
-  html {
+  html, body {
     background-color: #000000;
-    height: 100vh;
-    height: -webkit-fill-available;
-    overflow: hidden;
-  }
-
-  body {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-    background-color: var(--bg-main);
-    color: var(--text-main);
-    text-align: center;
-    padding: 4px 10px calc(8px + env(safe-area-inset-bottom));
     margin: 0;
-    height: 100vh;
-    height: 100dvh;
-    height: -webkit-fill-available;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    box-sizing: border-box;
+    padding: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    color: var(--text-main);
     -webkit-user-select: none;
     user-select: none;
-    transition: background 0.2s ease;
-    overflow: hidden;
-  }
-
-  /* HEADER */
-  .header-area {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    height: 24px;
-    margin-bottom: 2px;
-    flex-shrink: 0;
-  }
-  h2 {
-    margin: 0;
-    font-size: 13px;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    color: var(--text-title);
-  }
-  .btn-mode {
-    background: var(--bg-card);
-    border: 1px solid var(--border-card);
-    color: #e2e8f0;
-    border-radius: 50%;
-    width: 24px;
-    height: 24px;
-    font-size: 11px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  body.red-mode .btn-mode { color: #ef4444; }
-
-  /* BLOCCO TARGHE */
-  .top-tg-block {
-    background: var(--bg-card);
-    border-radius: 12px;
-    padding: 4px 8px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    box-sizing: border-box;
-    border: 1px solid var(--border-card);
-    height: 112px;
-    margin-bottom: 4px;
-    flex-shrink: 0;
-  }
-  .tg-side-btns {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-    width: 28%;
-  }
-  .tg-center-display {
-    width: 42%;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    gap: 2px;
-  }
-  .tg-label-num {
-    font-size: 12px;
-    color: #cbd5e1;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-  body.red-mode .tg-label-num { color: #fca5a5; }
-
-  .tg-label-num span {
-    font-size: 24px;
-    font-weight: 800;
-    color: #ffffff;
-    line-height: 1;
-  }
-  body.red-mode .tg-label-num span { color: #ef4444; }
-
-  .btn-tg-v {
-    height: 48px !important;
-    min-height: 48px !important;
-    font-size: 15px !important;
-    border-radius: 8px;
-    font-weight: bold;
-    text-transform: uppercase;
-  }
-
-  /* GRIGLIA CONTATORI */
-  .flex-grid {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-    flex-grow: 1;
-    margin-bottom: 4px;
-  }
-  .flex-row {
-    display: flex;
-    gap: 4px;
-    flex: 1;
-  }
-
-  .card {
-    background: var(--bg-card);
-    border-radius: 12px;
-    padding: 4px 6px;
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    box-sizing: border-box;
-    border: 1px solid var(--border-card);
-  }
-
-  .card.pos-highlight {
-    background: var(--pos-highlight);
-    border: 1px solid var(--pos-border);
-  }
-
-  .card h3 {
-    margin: 1px 0 0 0;
-    font-size: 12px;
-    color: var(--text-title);
-    text-transform: uppercase;
-    font-weight: 700;
-  }
-  .card.pos-highlight h3 { color: var(--pos-text); }
-
-  .num {
-    font-size: 34px;
-    font-weight: 800;
-    margin: auto 0;
-    line-height: 1;
-    color: #fff;
-  }
-  body.red-mode .num { color: #fca5a5; }
-  body.red-mode .card.pos-highlight .num { color: var(--pos-text); }
-  .card.pos-highlight .num { color: var(--pos-text); }
-
-  /* FLASH DI CONFERMA SU MODIFICA VALORE */
-  @keyframes flashPulse {
-    0% { color: var(--ok-flash); transform: scale(1.12); }
-    100% { color: inherit; transform: scale(1); }
-  }
-  .flash-update { animation: flashPulse 0.35s ease-out; display: inline-block; }
-  @media (prefers-reduced-motion: reduce) {
-    .flash-update { animation: none; }
-  }
-
-  .btn-container {
-    display: flex;
-    gap: 4px;
-    width: 100%;
-  }
-
-  button {
-    border: 0;
-    font-weight: bold;
-    touch-action: manipulation;
-    cursor: pointer;
-    transition: transform 0.05s ease, background-color 0.2s ease;
-  }
-  button:active {
-    transform: scale(0.95);
-  }
-  button:focus-visible {
-    outline: 2px solid #38bdf8;
-    outline-offset: 2px;
-  }
-
-  .card button {
-    font-size: 16px !important;
-    height: 48px !important;
-    min-height: 48px !important;
-    border-radius: 6px;
-  }
-
-  .plus { background: #059669; color: white; flex: 3.2; }
-  .plus-sosta { background: #2563eb; color: white; flex: 3.2; }
-  .minus { background: #dc2626; color: white; flex: 0.8; font-size: 14px !important; }
-
-  body.red-mode .plus { background: #064e3b; color: #a7f3d0; }
-  body.red-mode .plus-sosta { background: #1e3a8a; color: #bfdbfe; }
-  body.red-mode .minus { background: #7f1d1d; color: #fca5a5; }
-
-  /* TASTI MODAL */
-  .btn-trigger-panel {
-    position: relative;
-    color: white;
-    width: 100%;
-    height: 48px;
-    min-height: 48px;
-    font-size: 14px;
-    font-weight: bold;
-    border-radius: 10px;
-    text-transform: uppercase;
-    margin-bottom: 4px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 6px;
-    flex-shrink: 0;
-  }
-  .btn-pdc { background: #7c3aed; border: 1px solid #8b5cf6; }
-  .btn-appiedati { background: #1d4ed8; border: 1px solid #2563eb; }
-
-  body.red-mode .btn-pdc { background: #581c87; border-color: #6b21a8; color: #e9d5ff; }
-  body.red-mode .btn-appiedati { background: #1e3a8a; border-color: #1e40af; color: #bfdbfe; }
-
-  /* PALLINO INDICATORE: c'è un dato non azzerato dentro il pannello */
-  .btn-trigger-panel.has-data::after {
-    content: '';
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    background: var(--ok-flash);
-    box-shadow: 0 0 5px var(--ok-flash);
-  }
-
-  /* FOOTER INTERFACCIA */
-  .footer {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-    flex-shrink: 0;
-  }
-
-  .summary {
-    font-size: 11px;
-    background: #050505;
-    padding: 6px 10px;
-    border-radius: 8px;
-    text-align: left;
-    white-space: pre-line;
-    border: 1px solid #111111;
-    color: #0ea5e9;
-    font-family: monospace;
-    min-height: 34px;
-    box-sizing: border-box;
-    display: flex;
-    align-items: center;
-  }
-  body.red-mode .summary {
-    background: #110303;
-    border-color: #2d0606;
-    color: #f87171;
-  }
-
-  .action-btns {
-    display: flex;
-    gap: 4px;
-    height: 48px;
-    min-height: 48px;
-  }
-  .undo { background: #4b5563; color: white; flex: 0.6; font-size: 18px; border-radius: 8px; height: 100%; }
-  .whatsapp { background: #16a34a; color: white; flex: 1.3; font-size: 13px; border-radius: 8px; height: 100%; }
-  .copy-btn { background: #0284c7; color: white; flex: 1.3; font-size: 13px; border-radius: 8px; height: 100%; }
-  .backup-btn { background: #334155; color: white; flex: 0.6; font-size: 18px; border-radius: 8px; height: 100%; }
-  .copy-success { background: #16a34a !important; color: white !important; }
-  .reset { background: #b45309; color: white; flex: 0.6; font-size: 18px; border-radius: 8px; height: 100%; }
-
-  body.red-mode .undo { background: #3f3f46; color: #d4d4d8; }
-  body.red-mode .whatsapp { background: #064e3b; color: #a7f3d0; }
-  body.red-mode .copy-btn { background: #0369a1; color: #bae6fd; }
-  body.red-mode .backup-btn { background: #27272a; color: #d4d4d8; }
-  body.red-mode .reset { background: #7c2d12; color: #ffedd5; }
-
-  /* MODAL OVERLAYS */
-  .modal-overlay {
-    position: fixed;
-    top: 0; left: 0; width: 100%; height: 100%;
-    background: rgba(0, 0, 0, 0.95);
-    display: none;
-    justify-content: center;
-    align-items: center;
-    z-index: 9999;
-    padding: 15px;
     box-sizing: border-box;
   }
-  .modal-content {
-    background: var(--bg-main);
-    width: 100%;
-    max-width: 400px;
-    border-radius: 16px;
-    padding: 15px;
-    border: 2px solid var(--border-card);
+
+  /* Scorrimento fluido per la Digital Crown */
+  .watch-container {
+    padding: 6px 4px calc(20px + env(safe-area-inset-bottom)) 4px;
     display: flex;
     flex-direction: column;
     gap: 8px;
-    position: relative;
   }
-  .modal-header {
+
+  /* HEADER COMPATTO */
+  .header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    width: 100%;
-    margin-bottom: 4px;
+    padding: 0 4px;
+    height: 20px;
   }
-  .btn-close-x {
-    background: none;
+  .header h2 { font-size: 11px; margin: 0; color: var(--text-title); text-transform: uppercase; }
+  .btn-mode {
+    background: var(--bg-card);
+    border: 1px solid var(--border-card);
+    border-radius: 50%;
+    width: 20px; height: 20px;
+    font-size: 9px;
+    display: flex; align-items: center; justify-content: center;
+    color: #fff;
+  }
+  body.red-mode .btn-mode { color: #ef4444; }
+
+  /* SEZIONI SCHERMO */
+  .section-divider {
+    font-size: 10px;
+    font-weight: bold;
+    color: var(--accent);
+    text-transform: uppercase;
+    text-align: left;
+    padding-left: 4px;
+    margin-top: 4px;
+    border-left: 2px solid var(--accent);
+  }
+
+  /* RIGA CONTATORE APPIATTITA */
+  .watch-row {
+    background: var(--bg-card);
+    border: 1px solid var(--border-card);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    height: 46px;
+    overflow: hidden;
+  }
+  .watch-row.highlight {
+    background: var(--pos-highlight);
+    border-color: var(--pos-border);
+  }
+
+  .row-label {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    pointer-events: none;
+  }
+  .row-label h3 { margin: 0; font-size: 10px; color: var(--text-title); text-transform: uppercase; }
+  .row-label .num { font-size: 20px; font-weight: 800; color: #fff; line-height: 1.1; }
+  body.red-mode .row-label .num { color: var(--text-main); }
+
+  /* PULSANTI OPERATIVI */
+  button {
     border: 0;
-    color: #64748b;
-    font-size: 20px;
-    padding: 4px 8px;
+    height: 100%;
+    font-weight: bold;
+    touch-action: manipulation;
     cursor: pointer;
   }
-  .btn-chiudi-modal {
-    background: #0f766e;
-    color: white;
-    padding: 12px;
-    font-size: 16px;
-    font-weight: bold;
-    border-radius: 10px;
-    text-transform: uppercase;
-    height: 48px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  body.red-mode .btn-chiudi-modal { background: #991b1b; color: #fca5a5; }
+  button:active { opacity: 0.7; }
 
-  .pdc-tg-block {
-    background: var(--bg-card);
-    border-radius: 12px;
-    padding: 6px 12px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    box-sizing: border-box;
-    border: 1px solid var(--border-card);
-    height: 64px;
-    margin-bottom: 4px;
-    flex-shrink: 0;
+  .btn-minus { background: #262626; color: #ef4444; width: 38px; font-size: 14px; }
+  .btn-plus { background: #059669; color: white; width: 52px; font-size: 16px; }
+  .btn-plus-sosta { background: #2563eb; color: white; width: 52px; font-size: 16px; }
+
+  body.red-mode .btn-minus { background: #2d0606; color: #fca5a5; }
+  body.red-mode .btn-plus { background: #064e3b; color: #a7f3d0; }
+  body.red-mode .btn-plus-sosta { background: #1e3a8a; color: #bfdbfe; }
+
+  /* AREA UTILITY IN FONDO */
+  .summary-box {
+    background: #090909;
+    border: 1px solid #151515;
+    border-radius: 8px;
+    padding: 6px;
+    font-size: 10px;
+    font-family: monospace;
+    text-align: left;
+    white-space: pre-line;
+    color: #0ea5e9;
   }
+  body.red-mode .summary-box { background: #0f0202; border-color: #250404; color: #f87171; }
+
+  .footer-actions {
+    display: flex;
+    gap: 4px;
+    height: 40px;
+  }
+  .btn-action { font-size: 11px; border-radius: 8px; color: white; display: flex; align-items: center; justify-content: center; flex: 1; }
+  .wsp { background: #16a34a; }
+  .cpy { background: #0284c7; }
+  .cpy.success { background: #15803d !important; }
+  .und { background: #4b5563; flex: 0.5; font-size: 14px; }
+  .rst { background: #b45309; flex: 0.5; font-size: 14px; }
+
+  body.red-mode .wsp { background: #064e3b; color: #a7f3d0; }
+  body.red-mode .cpy { background: #0369a1; color: #bae6fd; }
+  body.red-mode .und { background: #3f3f46; color: #d4d4d8; }
+  body.red-mode .rst { background: #7c2d12; color: #ffedd5; }
 </style>
 </head>
 <body>
 
-<div class="header-area">
-  <h2>Posto di Controllo V2</h2>
-  <button class="btn-mode" id="mode-icon" onclick="toggleModalita()">🔴</button>
-</div>
-
-<!-- CONTAINER OPERATIVO PRINCIPALE -->
-<div class="top-tg-block">
-  <div class="tg-side-btns">
-    <button class="plus-sosta btn-tg-v" onclick="cambia('tgSosta',1)">+1 S</button>
-    <button class="minus btn-tg-v" onclick="cambia('tgSosta',-1)">-1 S</button>
-  </div>
-  <div class="tg-center-display">
-    <div class="tg-label-num">Sosta: <span id="val-tgSosta">0</span></div>
-    <div class="tg-label-num">Occupanti: <span id="val-tg">0</span></div>
-  </div>
-  <div class="tg-side-btns">
-    <button class="plus btn-tg-v" onclick="cambia('tg',1)">+1 O</button>
-    <button class="minus btn-tg-v" onclick="cambia('tg',-1)">-1 O</button>
-  </div>
-</div>
-
-<div class="flex-grid">
-  <div class="flex-row">
-    <div class="card pos-highlight">
-      <h3>Ita Pos</h3>
-      <div class="num" id="val-itaPos">0</div>
-      <div class="btn-container">
-        <button class="minus" onclick="cambia('itaPos',-1)">-1</button>
-        <button class="plus" onclick="cambia('itaPos',1)">+1</button>
-      </div>
-    </div>
-    <div class="card">
-      <h3>Ita Neg</h3>
-      <div class="num" id="val-itaNeg">0</div>
-      <div class="btn-container">
-        <button class="minus" onclick="cambia('itaNeg',-1)">-1</button>
-        <button class="plus" onclick="cambia('itaNeg',1)">+1</button>
-      </div>
-    </div>
+<div class="watch-container">
+  
+  <!-- HEADER -->
+  <div class="header">
+    <h2>Memb. Ultra V1</h2>
+    <button class="btn-mode" id="mode-icon" onclick="toggleModalita()">🔴</button>
   </div>
 
-  <div class="flex-row">
-    <div class="card pos-highlight">
-      <h3>Stra Pos</h3>
-      <div class="num" id="val-straPos">0</div>
-      <div class="btn-container">
-        <button class="minus" onclick="cambia('straPos',-1)">-1</button>
-        <button class="plus" onclick="cambia('straPos',1)">+1</button>
-      </div>
-    </div>
-    <div class="card">
-      <h3>Stra Neg</h3>
-      <div class="num" id="val-straNeg">0</div>
-      <div class="btn-container">
-        <button class="minus" onclick="cambia('straNeg',-1)">-1</button>
-        <button class="plus" onclick="cambia('straNeg',1)">+1</button>
-      </div>
-    </div>
+  <!-- SEZIONE: TRANSITO / SOSTA -->
+  <div class="section-divider">Transito / Sosta</div>
+  
+  <div class="watch-row">
+    <button class="btn-minus" onclick="cambia('tgSosta',-1)">-</button>
+    <div class="row-label"><h3>Targhe S.</h3><div class="num" id="val-tgSosta">0</div></div>
+    <button class="btn-plus-sosta" onclick="cambia('tgSosta',1)">+S</button>
   </div>
-</div>
 
-<button class="btn-trigger-panel btn-pdc" id="btn-apri-pdc" onclick="apriModal('modalPdc')">🚨 Posto di Controllo</button>
-<button class="btn-trigger-panel btn-appiedati" id="btn-apri-appiedati" onclick="apriModal('modalAppiedati')">🚶 Appiedati</button>
-
-<!-- FOOTER CON PULSANTI RIORGANIZZATI -->
-<div class="footer">
-  <div class="summary" id="riepilogo">Nessun controllo effettuato</div>
-  <div class="action-btns">
-    <button class="undo" id="btn-undo" onclick="annulla()" style="opacity: 0.3;">↩︎</button>
-    <button class="whatsapp" onclick="inviaWhatsApp()">💬 Invia</button>
-    <button class="copy-btn" id="btn-copia" onclick="copiaTesto()">📋 Copia</button>
-    <button class="backup-btn" onclick="esportaBackup()" title="Esporta backup JSON">⬇️</button>
-    <button class="reset" onclick="azzera()">🗑️</button>
+  <div class="watch-row">
+    <button class="btn-minus" onclick="cambia('tg',-1)">-</button>
+    <div class="row-label"><h3>Occ. Tra.</h3><div class="num" id="val-tg">0</div></div>
+    <button class="btn-plus" onclick="cambia('tg',1)">+O</button>
   </div>
-</div>
 
-<!-- MODAL: POSTO DI CONTROLLO -->
-<div class="modal-overlay" id="modalPdc">
-  <div class="modal-content">
-    <div class="modal-header">
-      <h2 style="color:#a78bfa; margin:0; font-size:15px;">🚨 Attività Posto di Controllo</h2>
-      <button class="btn-close-x" onclick="chiudiModal('modalPdc')">✕</button>
-    </div>
-
-    <div class="pdc-tg-block">
-      <button class="minus" style="height:48px; width:48px; border-radius:8px;" onclick="cambia('pdcTg',-1)">-1</button>
-      <div style="font-size:14px; color:#cbd5e1; font-weight:bold;">Veicoli Controllati: <span id="val-pdcTg" style="font-size:22px; font-weight:800; color:#fff; margin-left:6px;">0</span></div>
-      <button class="plus" style="height:48px; width:64px; border-radius:8px;" onclick="cambia('pdcTg',1)">+1</button>
-    </div>
-
-    <div style="display: flex; flex-direction: column; gap: 6px; flex-grow: 1; margin-bottom:6px;">
-      <div class="flex-row">
-        <div class="card pos-highlight">
-          <h3>Ita Pos</h3>
-          <div class="num" id="val-pdcItaPos">0</div>
-          <div class="btn-container">
-            <button class="minus" onclick="cambia('pdcItaPos',-1)">-1</button>
-            <button class="plus" onclick="cambia('pdcItaPos',1)">+1</button>
-          </div>
-        </div>
-        <div class="card">
-          <h3>Ita Neg</h3>
-          <div class="num" id="val-pdcItaNeg">0</div>
-          <div class="btn-container">
-            <button class="minus" onclick="cambia('pdcItaNeg',-1)">-1</button>
-            <button class="plus" onclick="cambia('pdcItaNeg',1)">+1</button>
-          </div>
-        </div>
-      </div>
-      <div class="flex-row">
-        <div class="card pos-highlight">
-          <h3>Stra Pos</h3>
-          <div class="num" id="val-pdcStraPos">0</div>
-          <div class="btn-container">
-            <button class="minus" onclick="cambia('pdcStraPos',-1)">-1</button>
-            <button class="plus" onclick="cambia('pdcStraPos',1)">+1</button>
-          </div>
-        </div>
-        <div class="card">
-          <h3>Stra Neg</h3>
-          <div class="num" id="val-pdcStraNeg">0</div>
-          <div class="btn-container">
-            <button class="minus" onclick="cambia('pdcStraNeg',-1)">-1</button>
-            <button class="plus" onclick="cambia('pdcStraNeg',1)">+1</button>
-          </div>
-        </div>
-      </div>
-    </div>
-    <button class="btn-chiudi-modal" onclick="chiudiModal('modalPdc')">Fatto</button>
+  <div class="watch-row highlight">
+    <button class="btn-minus" onclick="cambia('itaPos',-1)">-</button>
+    <div class="row-label"><h3>Ita Pos</h3><div class="num" id="val-itaPos">0</div></div>
+    <button class="btn-plus" onclick="cambia('itaPos',1)">+1</button>
   </div>
-</div>
 
-<!-- MODAL: APPIEDATI -->
-<div class="modal-overlay" id="modalAppiedati">
-  <div class="modal-content">
-    <div class="modal-header">
-      <h2 style="color:#38bdf8; margin:0; font-size:15px;">Controlli Appiedati</h2>
-      <button class="btn-close-x" onclick="chiudiModal('modalAppiedati')">✕</button>
-    </div>
-    <div style="display: flex; flex-direction: column; gap: 6px; flex-grow: 1; margin-bottom:8px;">
-      <div class="flex-row">
-        <div class="card pos-highlight">
-          <h3>Ita Pos</h3>
-          <div class="num" id="val-apItaPos">0</div>
-          <div class="btn-container">
-            <button class="minus" onclick="cambia('apItaPos',-1)">-1</button>
-            <button class="plus" onclick="cambia('apItaPos',1)">+1</button>
-          </div>
-        </div>
-        <div class="card">
-          <h3>Ita Neg</h3>
-          <div class="num" id="val-apItaNeg">0</div>
-          <div class="btn-container">
-            <button class="minus" onclick="cambia('apItaNeg',-1)">-1</button>
-            <button class="plus" onclick="cambia('apItaNeg',1)">+1</button>
-          </div>
-        </div>
-      </div>
-      <div class="flex-row">
-        <div class="card pos-highlight">
-          <h3>Stra Pos</h3>
-          <div class="num" id="val-apStraPos">0</div>
-          <div class="btn-container">
-            <button class="minus" onclick="cambia('apStraPos',-1)">-1</button>
-            <button class="plus" onclick="cambia('apStraPos',1)">+1</button>
-          </div>
-        </div>
-        <div class="card">
-          <h3>Stra Neg</h3>
-          <div class="num" id="val-apStraNeg">0</div>
-          <div class="btn-container">
-            <button class="minus" onclick="cambia('apStraNeg',-1)">-1</button>
-            <button class="plus" onclick="cambia('apStraNeg',1)">+1</button>
-          </div>
-        </div>
-      </div>
-    </div>
-    <button class="btn-chiudi-modal" onclick="chiudiModal('modalAppiedati')">Fatto</button>
+  <div class="watch-row">
+    <button class="btn-minus" onclick="cambia('itaNeg',-1)">-</button>
+    <div class="row-label"><h3>Ita Neg</h3><div class="num" id="val-itaNeg">0</div></div>
+    <button class="btn-plus" onclick="cambia('itaNeg',1)">+1</button>
   </div>
+
+  <div class="watch-row highlight">
+    <button class="btn-minus" onclick="cambia('straPos',-1)">-</button>
+    <div class="row-label"><h3>Stra Pos</h3><div class="num" id="val-straPos">0</div></div>
+    <button class="btn-plus" onclick="cambia('straPos',1)">+1</button>
+  </div>
+
+  <div class="watch-row">
+    <button class="btn-minus" onclick="cambia('straNeg',-1)">-</button>
+    <div class="row-label"><h3>Stra Neg</h3><div class="num" id="val-straNeg">0</div></div>
+    <button class="btn-plus" onclick="cambia('straNeg',1)">+1</button>
+  </div>
+
+  <!-- SEZIONE: POSTO DI CONTROLLO -->
+  <div class="section-divider">Posto di Controllo</div>
+
+  <div class="watch-row">
+    <button class="btn-minus" onclick="cambia('pdcTg',-1)">-</button>
+    <div class="row-label"><h3>Veicoli PdC</h3><div class="num" id="val-pdcTg">0</div></div>
+    <button class="btn-plus" onclick="cambia('pdcTg',1)">+1</button>
+  </div>
+
+  <div class="watch-row highlight">
+    <button class="btn-minus" onclick="cambia('pdcItaPos',-1)">-</button>
+    <div class="row-label"><h3>PdC Ita P</h3><div class="num" id="val-pdcItaPos">0</div></div>
+    <button class="btn-plus" onclick="cambia('pdcItaPos',1)">+1</button>
+  </div>
+
+  <div class="watch-row">
+    <button class="btn-minus" onclick="cambia('pdcItaNeg',-1)">-</button>
+    <div class="row-label"><h3>PdC Ita N</h3><div class="num" id="val-pdcItaNeg">0</div></div>
+    <button class="btn-plus" onclick="cambia('pdcItaNeg',1)">+1</button>
+  </div>
+
+  <div class="watch-row highlight">
+    <button class="btn-minus" onclick="cambia('pdcStraPos',-1)">-</button>
+    <div class="row-label"><h3>PdC Str P</h3><div class="num" id="val-pdcStraPos">0</div></div>
+    <button class="btn-plus" onclick="cambia('pdcStraPos',1)">+1</button>
+  </div>
+
+  <div class="watch-row">
+    <button class="btn-minus" onclick="cambia('pdcStraNeg',-1)">-</button>
+    <div class="row-label"><h3>PdC Str N</h3><div class="num" id="val-pdcStraNeg">0</div></div>
+    <button class="btn-plus" onclick="cambia('pdcStraNeg',1)">+1</button>
+  </div>
+
+  <!-- SEZIONE: APPIEDATI -->
+  <div class="section-divider">Appiedati</div>
+
+  <div class="watch-row highlight">
+    <button class="btn-minus" onclick="cambia('apItaPos',-1)">-</button>
+    <div class="row-label"><h3>App Ita P</h3><div class="num" id="val-apItaPos">0</div></div>
+    <button class="btn-plus" onclick="cambia('apItaPos',1)">+1</button>
+  </div>
+
+  <div class="watch-row">
+    <button class="btn-minus" onclick="cambia('apItaNeg',-1)">-</button>
+    <div class="row-label"><h3>App Ita N</h3><div class="num" id="val-apItaNeg">0</div></div>
+    <button class="btn-plus" onclick="cambia('apItaNeg',1)">+1</button>
+  </div>
+
+  <div class="watch-row highlight">
+    <button class="btn-minus" onclick="cambia('apStraPos',-1)">-</button>
+    <div class="row-label"><h3>App Str P</h3><div class="num" id="val-apStraPos">0</div></div>
+    <button class="btn-plus" onclick="cambia('apStraPos',1)">+1</button>
+  </div>
+
+  <div class="watch-row">
+    <button class="btn-minus" onclick="cambia('apStraNeg',-1)">-</button>
+    <div class="row-label"><h3>App Str N</h3><div class="num" id="val-apStraNeg">0</div></div>
+    <button class="btn-plus" onclick="cambia('apStraNeg',1)">+1</button>
+  </div>
+
+  <!-- UTILITY E REPORT -->
+  <div class="section-divider">Output</div>
+  <div class="summary-box" id="riepilogo">Nessun dato</div>
+
+  <div class="footer-actions">
+    <button class="btn-action und" id="btn-undo" onclick="annulla()" style="opacity:0.3;">↩︎</button>
+    <button class="btn-action wsp" onclick="inviaWhatsApp()">💬</button>
+    <button class="btn-action cpy" id="btn-copia" onclick="copiaTesto()">📋</button>
+    <button class="btn-action rst" onclick="azzera()">🗑️</button>
+  </div>
+
 </div>
 
 <script>
-let datiSalvati = JSON.parse(localStorage.getItem("contatoreV1")) || {};
+let datiSalvati = JSON.parse(localStorage.getItem("watchContatoreV1")) || {};
 let dati = {
-  tgSosta: Number(datiSalvati.tgSosta) || 0,
-  tg: Number(datiSalvati.tg) || 0,
-  itaNeg: Number(datiSalvati.itaNeg) || 0,
-  itaPos: Number(datiSalvati.itaPos) || 0,
-  straPos: Number(datiSalvati.straPos) || 0,
-  straNeg: Number(datiSalvati.straNeg) || 0,
-  apItaNeg: Number(datiSalvati.apItaNeg) || 0,
-  apItaPos: Number(datiSalvati.apItaPos) || 0,
-  apStraPos: Number(datiSalvati.apStraPos) || 0,
-  apStraNeg: Number(datiSalvati.apStraNeg) || 0,
-  pdcTg: Number(datiSalvati.pdcTg) || 0,
-  pdcItaNeg: Number(datiSalvati.pdcItaNeg) || 0,
-  pdcItaPos: Number(datiSalvati.pdcItaPos) || 0,
-  pdcStraPos: Number(datiSalvati.pdcStraPos) || 0,
+  tgSosta: Number(datiSalvati.tgSosta) || 0, tg: Number(datiSalvati.tg) || 0,
+  itaNeg: Number(datiSalvati.itaNeg) || 0, itaPos: Number(datiSalvati.itaPos) || 0,
+  straPos: Number(datiSalvati.straPos) || 0, straNeg: Number(datiSalvati.straNeg) || 0,
+  apItaNeg: Number(datiSalvati.apItaNeg) || 0, apItaPos: Number(datiSalvati.apItaPos) || 0,
+  apStraPos: Number(datiSalvati.apStraPos) || 0, apStraNeg: Number(datiSalvati.apStraNeg) || 0,
+  pdcTg: Number(datiSalvati.pdcTg) || 0, pdcItaNeg: Number(datiSalvati.pdcItaNeg) || 0,
+  pdcItaPos: Number(datiSalvati.pdcItaPos) || 0, pdcStraPos: Number(datiSalvati.pdcStraPos) || 0,
   pdcStraNeg: Number(datiSalvati.pdcStraNeg) || 0
 };
 
 let cronologiaAzioni = [];
 
-// --- AUDIO CONTEXT RIUTILIZZABILE (creato una sola volta) ---
-let audioCtx = null;
 function feedbackTattico() {
-  if (navigator.vibrate) navigator.vibrate(15);
-  try {
-    const AudioContextClass = window.AudioContext || window.webkitAudioContext;
-    if (!AudioContextClass) return;
-    if (!audioCtx) audioCtx = new AudioContextClass();
-    if (audioCtx.state === "suspended") audioCtx.resume();
-    const osc = audioCtx.createOscillator();
-    const gain = audioCtx.createGain();
-    osc.type = "sine";
-    osc.frequency.setValueAtTime(550, audioCtx.currentTime);
-    gain.gain.setValueAtTime(0.12, audioCtx.currentTime);
-    gain.gain.exponentialRampToValueAtTime(0.00001, audioCtx.currentTime + 0.03);
-    osc.connect(gain); gain.connect(audioCtx.destination);
-    osc.start(); osc.stop(audioCtx.currentTime + 0.03);
-  } catch (e) {}
+  if (navigator.vibrate) navigator.vibrate(20);
 }
 
-// INIZIALIZZAZIONE STATO TATTICO MASCHERA
-if (localStorage.getItem("tatticoAttivo") === "true") {
+if (localStorage.getItem("watchTattico") === "true") {
   document.body.classList.add("red-mode");
   document.getElementById("mode-icon").innerText = "⚫";
 }
@@ -623,174 +303,93 @@ function toggleModalita() {
   feedbackTattico();
   const isRed = document.body.classList.toggle("red-mode");
   document.getElementById("mode-icon").innerText = isRed ? "⚫" : "🔴";
-  localStorage.setItem("tatticoAttivo", isRed);
+  localStorage.setItem("watchTattico", isRed);
 }
 
-function salva() {
-  localStorage.setItem("contatoreV1", JSON.stringify(dati));
-}
-
-function cambia(k, v, sbloccaUndo = true) {
+function cambia(k, v) {
   feedbackTattico();
-  const valorePrecedente = dati[k];
-  const nuovoValore = Math.max(0, dati[k] + v);
-  // Non salvare nello storico se il valore non cambia realmente (es. -1 già a 0)
-  if (sbloccaUndo && nuovoValore !== valorePrecedente) {
-    cronologiaAzioni.push({ chiave: k, valorePrecedente });
-    if (cronologiaAzioni.length > 20) cronologiaAzioni.shift();
-  }
-  dati[k] = nuovoValore;
-  salva();
+  cronologiaAzioni.push({ chiave: k, valorePrecedente: dati[k] });
+  if (cronologiaAzioni.length > 15) cronologiaAzioni.shift();
+  dati[k] = Math.max(0, dati[k] + v);
+  localStorage.setItem("watchContatoreV1", JSON.stringify(dati));
   aggiornaSchermata();
-  flashElemento(k);
-}
-
-function flashElemento(k) {
-  const el = document.getElementById(`val-${k}`);
-  if (!el) return;
-  el.classList.remove("flash-update");
-  void el.offsetWidth; // riavvia l'animazione anche su click ripetuti veloci
-  el.classList.add("flash-update");
 }
 
 function annulla() {
   if (cronologiaAzioni.length === 0) return;
   feedbackTattico();
-  let ultimaAzione = cronologiaAzioni.pop();
-  dati[ultimaAzione.chiave] = ultimaAzione.valorePrecedente;
-  salva();
+  let ultima = cronologiaAzioni.pop();
+  dati[ultima.chiave] = ultima.valorePrecedente;
+  localStorage.setItem("watchContatoreV1", JSON.stringify(dati));
   aggiornaSchermata();
 }
 
-function apriModal(id) { feedbackTattico(); document.getElementById(id).style.display = "flex"; }
-function chiudiModal(id) { feedbackTattico(); document.getElementById(id).style.display = "none"; }
-
 function generaReport(usaGrassetto = false) {
-  let macroBlocchi = [];
+  let macro = [];
   const b = usaGrassetto ? "*" : "";
+  
+  let detPdc = [];
+  if (dati.pdcItaNeg > 0) detPdc.push(`${b}${dati.pdcItaNeg}${b} ita neg`);
+  if (dati.pdcItaPos > 0) detPdc.push(`${b}${dati.pdcItaPos}${b} ita pos`);
+  if (dati.pdcStraPos > 0) detPdc.push(`${b}${dati.pdcStraPos}${b} stra pos`);
+  if (dati.pdcStraNeg > 0) detPdc.push(`${b}${dati.pdcStraNeg}${b} stra neg`);
+  
+  if (detPdc.length > 0) macro.push(`${b}POSTO DI CONTROLLO:${b} ${b}${dati.pdcTg}${b} tg con ${detPdc.join(", ")}`);
+  else if (dati.pdcTg > 0) macro.push(`${b}POSTO DI CONTROLLO:${b} ${b}${dati.pdcTg}${b} tg`);
 
-  // 1. POSTO DI CONTROLLO
-  let detPdcPersone = [];
-  if (dati.pdcItaNeg > 0) detPdcPersone.push(`${b}${dati.pdcItaNeg}${b} ita neg`);
-  if (dati.pdcItaPos > 0) detPdcPersone.push(`${b}${dati.pdcItaPos}${b} ita pos`);
-  if (dati.pdcStraPos > 0) detPdcPersone.push(`${b}${dati.pdcStraPos}${b} stra pos`);
-  if (dati.pdcStraNeg > 0) detPdcPersone.push(`${b}${dati.pdcStraNeg}${b} stra neg`);
-
-  if (detPdcPersone.length > 0) {
-    macroBlocchi.push(`${b}POSTO DI CONTROLLO:${b} ${b}${dati.pdcTg}${b} tg con ${detPdcPersone.join(", ")}`);
-  } else if (dati.pdcTg > 0) {
-    macroBlocchi.push(`${b}POSTO DI CONTROLLO:${b} ${b}${dati.pdcTg}${b} tg`);
-  }
-
-  // 2. APPIEDATI
   let detAp = [];
   if (dati.apItaNeg > 0) detAp.push(`${b}${dati.apItaNeg}${b} ita neg`);
   if (dati.apItaPos > 0) detAp.push(`${b}${dati.apItaPos}${b} ita pos`);
   if (dati.apStraPos > 0) detAp.push(`${b}${dati.apStraPos}${b} stra pos`);
   if (dati.apStraNeg > 0) detAp.push(`${b}${dati.apStraNeg}${b} stra neg`);
+  if (detAp.length > 0) macro.push(detAp.join(", "));
+  
+  if (dati.tgSosta > 0) macro.push(`${b}${dati.tgSosta}${b} tg`);
+  
+  let detTr = [];
+  if (dati.itaNeg > 0) detTr.push(`${b}${dati.itaNeg}${b} ita neg`);
+  if (dati.itaPos > 0) detTr.push(`${b}${dati.itaPos}${b} ita pos`);
+  if (dati.straPos > 0) detTr.push(`${b}${dati.straPos}${b} stra pos`);
+  if (dati.straNeg > 0) detTr.push(`${b}${dati.straNeg}${b} stra neg`);
+  
+  if (detTr.length > 0) macro.push(`${b}${dati.tg}${b} tg con ${detTr.join(", ")}`);
+  else if (dati.tg > 0) macro.push(`${b}${dati.tg}${b} tg`);
 
-  if (detAp.length > 0) {
-    macroBlocchi.push(detAp.join(", "));
-  }
-
-  // 3. TARGHE IN SOSTA
-  if (dati.tgSosta > 0) {
-    macroBlocchi.push(`${b}${dati.tgSosta}${b} tg`);
-  }
-
-  // 4. TRANSITO/SOSTA COMPLESSIVO
-  let detTransitoPersone = [];
-  if (dati.itaNeg > 0) detTransitoPersone.push(`${b}${dati.itaNeg}${b} ita neg`);
-  if (dati.itaPos > 0) detTransitoPersone.push(`${b}${dati.itaPos}${b} ita pos`);
-  if (dati.straPos > 0) detTransitoPersone.push(`${b}${dati.straPos}${b} stra pos`);
-  if (dati.straNeg > 0) detTransitoPersone.push(`${b}${dati.straNeg}${b} stra neg`);
-
-  if (detTransitoPersone.length > 0) {
-    macroBlocchi.push(`${b}${dati.tg}${b} tg con ${detTransitoPersone.join(", ")}`);
-  } else if (dati.tg > 0) {
-    macroBlocchi.push(`${b}${dati.tg}${b} tg`);
-  }
-
-  if (macroBlocchi.length === 0) return "Nessun controllo effettuato";
-
-  const ora = new Date().toLocaleString("it-IT", {
-    day: "2-digit", month: "2-digit", year: "numeric",
-    hour: "2-digit", minute: "2-digit"
-  });
-  const intestazione = `${b}Riepilogo ${ora}${b}`;
-  return intestazione + "\n\n" + macroBlocchi.join("\n\n");
+  return macro.length > 0 ? macro.join("\n\n") : "Nessun dato";
 }
 
 function aggiornaSchermata() {
   for (let k in dati) {
     let el = document.getElementById(`val-${k}`);
-    if (el) el.innerText = dati[k];
+    if(el) el.innerText = dati[k];
   }
   document.getElementById("riepilogo").innerText = generaReport(false);
-
-  let btnUndo = document.getElementById("btn-undo");
-  btnUndo.style.opacity = cronologiaAzioni.length > 0 ? "1" : "0.3";
-
-  // Indicatore su Posto di Controllo / Appiedati se contengono dati
-  const pdcAttivo = dati.pdcTg > 0 || dati.pdcItaPos > 0 || dati.pdcItaNeg > 0 || dati.pdcStraPos > 0 || dati.pdcStraNeg > 0;
-  const apAttivo = dati.apItaPos > 0 || dati.apItaNeg > 0 || dati.apStraPos > 0 || dati.apStraNeg > 0;
-  document.getElementById("btn-apri-pdc").classList.toggle("has-data", pdcAttivo);
-  document.getElementById("btn-apri-appiedati").classList.toggle("has-data", apAttivo);
+  document.getElementById("btn-undo").style.opacity = cronologiaAzioni.length > 0 ? "1" : "0.3";
 }
 
 function inviaWhatsApp() {
   feedbackTattico();
-  const t = generaReport(true);
-  const testoCodificato = encodeURIComponent(t);
-  const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-  if (isMobile) {
-    window.location.href = "whatsapp://send?text=" + testoCodificato;
-  } else {
-    window.open("https://wa.me/?text=" + testoCodificato, "_blank");
-  }
+  window.location.href = "whatsapp://send?text=" + encodeURIComponent(generaReport(true));
 }
 
 function copiaTesto() {
   feedbackTattico();
-  const t = generaReport(true);
-  navigator.clipboard.writeText(t).then(() => {
+  navigator.clipboard.writeText(generaReport(true)).then(() => {
     const btn = document.getElementById("btn-copia");
-    btn.classList.add("copy-success");
-    const vecchioTesto = btn.innerText;
-    btn.innerText = "✅ Copiato!";
-    setTimeout(() => {
-      btn.classList.remove("copy-success");
-      btn.innerText = vecchioTesto;
-    }, 1500);
-  }).catch(err => {
-    alert("Errore durante la copia.");
+    btn.classList.add("success");
+    setTimeout(() => { btn.classList.remove("success"); }, 1000);
   });
-}
-
-function esportaBackup() {
-  feedbackTattico();
-  const payload = { esportatoIl: new Date().toISOString(), contatori: dati };
-  const blob = new Blob([JSON.stringify(payload, null, 2)], { type: "application/json" });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = `backup_controlli_${new Date().toISOString().slice(0, 10)}.json`;
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
-  URL.revokeObjectURL(url);
 }
 
 function azzera() {
   feedbackTattico();
-  if (confirm("Ripristinare tutti i contatori a zero?")) {
+  if (confirm("Azzera tutto?")) {
     for (let k in dati) dati[k] = 0;
     cronologiaAzioni = [];
-    salva();
+    localStorage.setItem("watchContatoreV1", JSON.stringify(dati));
     aggiornaSchermata();
   }
 }
-
 aggiornaSchermata();
 </script>
 </body>
